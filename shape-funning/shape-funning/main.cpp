@@ -86,10 +86,19 @@ void InitShaderProgram(GLuint &shaderProgram, GLuint vertexShader, GLuint fragme
 	}
 }
 
-void DrawPolygon(std::string type, const GLuint &shaderProgram, const GLuint &VAO)
+void DrawPolygon(std::string type, const GLuint &shaderProgram, const GLuint &VAO, const bool &wireFramed)
 {
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
+
+	if (wireFramed)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
 	if (type == "triangle")
 	{
@@ -213,7 +222,8 @@ int main()
 		glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		DrawPolygon("rectangle", shaderProgram, VAO);
+		bool wireFramed = true;
+		DrawPolygon("rectangle", shaderProgram, VAO, wireFramed);
 
 		glfwSwapBuffers(window);
 	}
