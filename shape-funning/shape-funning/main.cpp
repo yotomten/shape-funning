@@ -54,7 +54,6 @@ void	InitShaders(GLuint &vertexShader, GLuint &fragmentShader)
 	}
 
 	// Compile fragment shader
-	//GLuint fragmentShader;
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
@@ -94,6 +93,14 @@ void DrawTriangle(const GLuint &shaderProgram, const GLuint &VAO)
 	glDrawArrays(GL_TRIANGLES, 0, 3); // Arg1 0 start index of vertex array
 									  // Arg2 3 vertices are to be drawn
 	glBindVertexArray(0);
+}
+
+void DrawRectangle(const GLuint &shaderProgram, const GLuint &VAO, const GLuint &EBO)
+{
+	glUseProgram(shaderProgram);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 int main()
@@ -136,10 +143,23 @@ int main()
 	// Triangle vertices as normalized device coordinates
 	GLfloat vertices[] =
 	{
-		-0.5f, -0.5f, 0.0f,
+		0.5f, 0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f
+		-0.5f, -0.5f, 0.0f,
+		-0.5f, 0.5f, 0.0f
 	};
+
+	GLuint indices[] =
+	{
+		0, 1, 3,	// First triangle
+		1, 2, 3		// Second triangle
+	};
+
+	// Init rectangle EBO
+	GLuint EBO;
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Init triangle VBO to store vertices in GPU memory
 	GLuint VBO;
@@ -188,7 +208,8 @@ int main()
 		glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		DrawTriangle(shaderProgram, VAO);
+		//DrawTriangle(shaderProgram, VAO);
+		DrawRectangle(shaderProgram, VAO, EBO);
 
 		glfwSwapBuffers(window);
 	}
