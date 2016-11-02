@@ -87,6 +87,15 @@ void InitShaderProgram(GLuint &shaderProgram, GLuint vertexShader, GLuint fragme
 	}
 }
 
+void DrawTriangle(const GLuint &shaderProgram, const GLuint &VAO)
+{
+	glUseProgram(shaderProgram);
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 3); // Arg1 0 start index of vertex array
+									  // Arg2 3 vertices are to be drawn
+	glBindVertexArray(0);
+}
+
 int main()
 {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
@@ -135,17 +144,40 @@ int main()
 	// Init triangle VBO to store vertices in GPU memory
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
+
+	// Init vertex array object
+	GLuint VAO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copies vertex data to GPU
 																			   // GL_STATIC_DRAW since the data most likely
 																			   // will not change
+	
+	// Specify how vertex data is to be interpreted
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
+																					  // Arg2 3 since position data vec3
+																					  // Arg4 false since already normalized values
+																					  // Arg5 Space between attribute sets
+																					  // Arg6 No data offset in buffer 
+	glEnableVertexAttribArray(0); // Vertex attribute location is 0
+	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring
+
+
 	// Compile shaders
 	GLuint vertexShader, fragmentShader;
 	InitShaders(vertexShader, fragmentShader);
 
+	// Attach shaders and link shader program
 	GLuint shaderProgram;
 	InitShaderProgram(shaderProgram, vertexShader, fragmentShader);
 	glUseProgram(shaderProgram);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -156,8 +188,14 @@ int main()
 		glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		DrawTriangle(shaderProgram, VAO);
+
 		glfwSwapBuffers(window);
 	}
+
+	// Deallocate resources
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
 
 	glfwTerminate(); // Clear allocated resources
 	return 0;
