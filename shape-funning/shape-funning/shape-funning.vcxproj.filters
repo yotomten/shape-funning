@@ -23,5 +23,8 @@
     <FxCompile Include="VertexShader.glsl">
       <Filter>Source Files</Filter>
     </FxCompile>
+    <FxCompile Include="FragmentShader.glsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

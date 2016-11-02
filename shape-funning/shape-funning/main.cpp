@@ -29,6 +29,19 @@ const GLchar* vertexShaderSource =
 	"gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
 	"}\0";
 
+const GLchar* fragmentShaderSource =
+	"#version 330 core\n"
+	"out vec4 color;\n"
+	"void main()\n"
+	"{\n"
+	"	color = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+	"}\n";
+
+void	InitShaders()
+{
+
+}
+
 int main()
 {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
@@ -81,10 +94,9 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copies vertex data to GPU
 																			   // GL_STATIC_DRAW since the data most likely
 																			   // will not change
-	// Compile shader
+	// Compile vertex shader
 	GLuint vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL); // 1 string, attach source code
 	glCompileShader(vertexShader);
 
@@ -97,6 +109,24 @@ int main()
 		glGetShaderInfoLog(vertexShader,512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
+
+	// Compile fragment shader
+	GLuint fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+	// Check for compile errors
+	GLint fragmentShaderSuccess;
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fragmentShaderSuccess); // Check if shader compilation successful
+	if (!fragmentShaderSuccess)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	GLuint shaderProgram;
+	shaderProgram = glCreateProgram();
 
 
 	// Game loop
