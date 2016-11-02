@@ -13,7 +13,7 @@
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -21,12 +21,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 // Shaders
-const GLchar* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 position;\n"
-"void main()\n"
-"{\n"
-"gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-"}\0";
+const GLchar* vertexShaderSource =
+	"#version 330 core\n"
+	"layout (location = 0) in vec3 position;\n"
+	"void main()\n"
+	"{\n"
+	"gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
+	"}\0";
 
 int main()
 {
@@ -47,6 +48,7 @@ int main()
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
+	glfwSetKeyCallback(window, KeyCallback);
 
 	// Init GLEW to setup function pointers for OpenGl
 
@@ -58,16 +60,13 @@ int main()
 	}
 
 	// Define width and height for OpenGL (viewport dimensions)
+	// OpenGL uses this data to map from processed coordinates in range (-1,1) to (0,800) and (0,600)
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height); // Framebuffer size in pixels instead of screen coordinates
 	glViewport(0, 0, width, height); // (0, 0) = Southwest corner of window
-	// OpenGL uses this data to map from processed coordinates in range (-1,1)
-	// to (0,800) and (0,600)
 
-	glfwSetKeyCallback(window, key_callback);
-
-	// Triangle vertices
+	// Triangle vertices as normalized device coordinates
 	GLfloat vertices[] =
 	{
 		-0.5f, -0.5f, 0.0f,
@@ -75,18 +74,29 @@ int main()
 		0.0f, 0.5f, 0.0f
 	};
 
-	// Init triangle VBO
+	// Init triangle VBO to store vertices in GPU memory
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copies vertex data to GPU
+																			   // GL_STATIC_DRAW since the data most likely
+																			   // will not change
 	// Compile shader
 	GLuint vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL); // 1 string, attach source code
 	glCompileShader(vertexShader);
+
+	// Check for compile errors
+	GLint vertexShaderSuccess;
+	GLchar infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vertexShaderSuccess); // Check if shader compilation successful
+	if (!vertexShaderSuccess)
+	{
+		glGetShaderInfoLog(vertexShader,512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
 
 
 	// Game loop
