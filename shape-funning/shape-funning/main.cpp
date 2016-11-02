@@ -118,7 +118,7 @@ void DrawPolygon(std::string type, const GLuint &shaderProgram, const GLuint &VA
 	glBindVertexArray(0);
 }
 
-int main()
+bool InitGlfwAndGlew(GLFWwindow* &window)
 {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 	// Init GLFW and set all its required options
@@ -129,12 +129,12 @@ int main()
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Necessary for Mac OSX
 
 	// Init GLFWwindow object
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", nullptr, nullptr);
+	window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
-		return -1;
+		return false;
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, KeyCallback);
@@ -145,15 +145,46 @@ int main()
 	if (glewInit() != GLEW_OK)
 	{
 		std::cout << "Failed to init GLEW" << std::endl;
-		return -1;
+		return false;
 	}
 
 	// Define width and height for OpenGL (viewport dimensions)
 	// OpenGL uses this data to map from processed coordinates in range (-1,1) to (0,800) and (0,600)
-
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height); // Framebuffer size in pixels instead of screen coordinates
 	glViewport(0, 0, width, height); // (0, 0) = Southwest corner of window
+
+	return true;
+}
+
+/*void SetPolygonData(GLfloat (&vertices)[12], GLfloat (&indices)[6])
+{
+	// Triangle vertices as normalized device coordinates
+	vertices[] =
+	{
+		0.5f, 0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		-0.5f, -0.5f, 0.0f,
+		-0.5f, 0.5f, 0.0f
+	};
+
+	indices[6] =
+	{
+		0, 1, 3,	// First triangle
+		1, 2, 3		// Second triangle
+	};
+}*/
+
+int main()
+{
+	GLFWwindow* window;
+	bool initGlfwGlewSuccess;
+	initGlfwGlewSuccess = InitGlfwAndGlew(window);
+	if (!initGlfwGlewSuccess) { return -1; }
+
+	//GLfloat vertices[12];
+	//GLuint indices[6];
+	//SetPolygonData(vertices, indices);
 
 	// Triangle vertices as normalized device coordinates
 	GLfloat vertices[] =
@@ -164,19 +195,18 @@ int main()
 		-0.5f, 0.5f, 0.0f
 	};
 
-	GLuint indices[] =
+	GLuint indices[6] =
 	{
 		0, 1, 3,	// First triangle
 		1, 2, 3		// Second triangle
 	};
 
-	// Init triangle VBO to store vertices in GPU memory, and rectangle EBO to index vertices
-	GLuint VBO, EBO;
+
+	// Init triangle VBO to store vertices in GPU memory, rectangle EBO to index vertices
+	// and VAO
+	GLuint VBO, VAO, EBO;
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
-
-	// Init vertex array object
-	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
@@ -187,7 +217,6 @@ int main()
 																			   // The VBO is stored in VAO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); // Stored in VAO
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-	
 
 	// Specify how vertex data is to be interpreted
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
@@ -196,8 +225,7 @@ int main()
 																					  // Arg5 Space between attribute sets
 																					  // Arg6 No data offset in buffer 
 	glEnableVertexAttribArray(0); // Vertex attribute location is 0
-	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring
-
+	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
 
 	// Compile shaders
 	GLuint vertexShader, fragmentShader;
@@ -231,6 +259,7 @@ int main()
 	// Deallocate resources
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 
 	glfwTerminate(); // Clear allocated resources
 	return 0;
