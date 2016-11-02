@@ -69,6 +69,24 @@ void	InitShaders(GLuint &vertexShader, GLuint &fragmentShader)
 	}
 }
 
+void InitShaderProgram(GLuint &shaderProgram, GLuint vertexShader, GLuint fragmentShader)
+{
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	// Check for link errors
+	GLint shaderProgramSuccess;
+	GLchar infoLog[512];
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &shaderProgramSuccess);
+	if (!shaderProgramSuccess)
+	{
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADEPROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+	}
+}
+
 int main()
 {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
@@ -126,8 +144,8 @@ int main()
 	InitShaders(vertexShader, fragmentShader);
 
 	GLuint shaderProgram;
-	shaderProgram = glCreateProgram();
-
+	InitShaderProgram(shaderProgram, vertexShader, fragmentShader);
+	glUseProgram(shaderProgram);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
