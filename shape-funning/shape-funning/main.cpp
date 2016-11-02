@@ -86,21 +86,27 @@ void InitShaderProgram(GLuint &shaderProgram, GLuint vertexShader, GLuint fragme
 	}
 }
 
-void DrawTriangle(const GLuint &shaderProgram, const GLuint &VAO)
+void DrawPolygon(std::string type, const GLuint &shaderProgram, const GLuint &VAO)
 {
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3); // Arg1 0 start index of vertex array
-									  // Arg2 3 vertices are to be drawn
-	glBindVertexArray(0);
-}
 
-void DrawRectangle(const GLuint &shaderProgram, const GLuint &VAO, const GLuint &EBO)
-{
-	glUseProgram(shaderProgram);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	if (type == "triangle")
+	{
+		glDrawArrays(GL_TRIANGLES, 0, 3); // Arg1 0 start index of vertex array
+										  // Arg2 3 vertices are to be drawn
+	}
+	else if (type == "rectangle")
+	{
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // Arg2 6 indices
+															 // Arg4 0 offset in EBO
+	}
+	else
+	{
+		std::cout << "Wrong type of polygon in call to DrawPolygon(). " << std::endl;
+	}
+
+	glBindVertexArray(0);
 }
 
 int main()
@@ -155,15 +161,10 @@ int main()
 		1, 2, 3		// Second triangle
 	};
 
-	// Init rectangle EBO
-	GLuint EBO;
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// Init triangle VBO to store vertices in GPU memory
-	GLuint VBO;
+	// Init triangle VBO to store vertices in GPU memory, and rectangle EBO to index vertices
+	GLuint VBO, EBO;
 	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 
 	// Init vertex array object
 	GLuint VAO;
@@ -174,7 +175,11 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copies vertex data to GPU
 																			   // GL_STATIC_DRAW since the data most likely
 																			   // will not change
+																			   // The VBO is stored in VAO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); // Stored in VAO
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	
+
 	// Specify how vertex data is to be interpreted
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
 																					  // Arg2 3 since position data vec3
@@ -208,8 +213,7 @@ int main()
 		glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//DrawTriangle(shaderProgram, VAO);
-		DrawRectangle(shaderProgram, VAO, EBO);
+		DrawPolygon("rectangle", shaderProgram, VAO);
 
 		glfwSwapBuffers(window);
 	}
