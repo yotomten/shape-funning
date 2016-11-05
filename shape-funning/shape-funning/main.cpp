@@ -157,34 +157,12 @@ bool InitGlfwAndGlew(GLFWwindow* &window)
 	return true;
 }
 
-/*void SetPolygonData(GLfloat (&vertices)[12], GLfloat (&indices)[6])
-{
-	// Triangle vertices as normalized device coordinates
-	vertices[] =
-	{
-		0.5f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f
-	};
-
-	indices[6] =
-	{
-		0, 1, 3,	// First triangle
-		1, 2, 3		// Second triangle
-	};
-}*/
-
 int main()
 {
 	GLFWwindow* window;
 	bool initGlfwGlewSuccess;
 	initGlfwGlewSuccess = InitGlfwAndGlew(window);
 	if (!initGlfwGlewSuccess) { return -1; }
-
-	//GLfloat vertices[12];
-	//GLuint indices[6];
-	//SetPolygonData(vertices, indices);
 
 	// Triangle vertices as normalized device coordinates
 	GLfloat vertices[] =
@@ -201,9 +179,8 @@ int main()
 		1, 2, 3		// Second triangle
 	};
 
-
 	// Init triangle VBO to store vertices in GPU memory, rectangle EBO to index vertices
-	// and VAO
+	// and VAO to collect all states
 	GLuint VBO, VAO, EBO;
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -235,11 +212,8 @@ int main()
 	GLuint shaderProgram;
 	InitShaderProgram(shaderProgram, vertexShader, fragmentShader);
 	glUseProgram(shaderProgram);
-
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-
-
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
