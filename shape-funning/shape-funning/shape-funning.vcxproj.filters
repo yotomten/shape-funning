@@ -20,11 +20,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.glsl">
-      <Filter>Source Files</Filter>
-    </FxCompile>
-    <FxCompile Include="FragmentShader.glsl">
-      <Filter>Source Files</Filter>
-    </FxCompile>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="shape-funning.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
