@@ -24,22 +24,22 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 const GLchar* vertexShaderSource =
 "#version 330 core\n"
 "layout (location = 0) in vec3 position;\n"
-"out vec4 vertexColor;\n"
+"layout (location = 1) in vec3 color;\n"
+"out vec3 ourColor;\n"
 "void main()\n"
 "{\n"
 "gl_Position = vec4(position, 1.0);\n"
-"vertexColor = vec4(0.5f, 0.0f, 0.0f, 1.0f);\n"
+"ourColor = color;\n"
 "}\0";
 
 const GLchar* fragmentShaderSource =
 "#version 330 core\n"
-"in vec4 vertexColor;\n"
-"uniform vec4 ourColor;\n"
+"in vec3 ourColor;\n"
 "out vec4 color;\n"
 "void main()\n"
 "{\n"
-"color = ourColor;\n"
-"}\n";
+"color = vec4(ourColor, 1.0f);\n"
+"}\0";
 
 void	InitShaders(GLuint &vertexShader, GLuint &fragmentShader)
 {
@@ -169,12 +169,12 @@ int main()
 	if (!initGlfwGlewSuccess) { return -1; }
 
 	// Triangle vertices as normalized device coordinates
-	GLfloat vertices[] =
-	{
-		0.5f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f
+
+	GLfloat vertices[] = {
+		// Positions         // Colors
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,   // Bottom Right
+		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   // Bottom Left
+		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f    // Top 
 	};
 
 	GLuint indices[6] =
@@ -199,13 +199,18 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); // Stored in VAO
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	// Specify how vertex data is to be interpreted
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
+	// Specify how vertex data is to be interpreted...........................................
+	// Position attributes
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
 																					  // Arg2 3 since position data vec3
 																					  // Arg4 false since already normalized values
 																					  // Arg5 Space between attribute sets
 																					  // Arg6 No data offset in buffer 
 	glEnableVertexAttribArray(0); // Vertex attribute location is 0
+
+	// Color attributes
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
 	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
 
 	// Compile shaders
@@ -225,18 +230,18 @@ int main()
 		glfwPollEvents(); // Check if events have been activated
 
 		// Color animation
-		GLfloat timeValue = glfwGetTime();
+		/*GLfloat timeValue = glfwGetTime();
 		GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
 		GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
 		glUseProgram(shaderProgram);
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);*/
 
 		// Rendering commands
 		glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		bool wireFramed = false;
-		DrawPolygon("rectangle", shaderProgram, VAO, wireFramed);
+		DrawPolygon("triangle", shaderProgram, VAO, wireFramed);
 
 		glfwSwapBuffers(window);
 	}
