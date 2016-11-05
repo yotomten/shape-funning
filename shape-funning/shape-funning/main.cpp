@@ -206,11 +206,11 @@ int main()
 																					  // Arg4 false since already normalized values
 																					  // Arg5 Space between attribute sets
 																					  // Arg6 No data offset in buffer 
-	glEnableVertexAttribArray(0); // Vertex attribute location is 0
+	glEnableVertexAttribArray(0); // Vertex attribute location is 0 for position
 
 	// Color attributes
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(1); // Vertex attribute location is 1 for color
 	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
 
 	// Compile shaders
@@ -228,13 +228,6 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents(); // Check if events have been activated
-
-		// Color animation
-		/*GLfloat timeValue = glfwGetTime();
-		GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
-		GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-		glUseProgram(shaderProgram);
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);*/
 
 		// Rendering commands
 		glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
