@@ -32,4 +32,12 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.vert">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="shader.frag">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

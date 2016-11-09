@@ -77,6 +77,14 @@
   <ItemGroup>
     <ResourceCompile Include="shape-funning.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.frag">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="shader.vert">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

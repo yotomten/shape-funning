@@ -15,11 +15,11 @@ public:
 	// Program ID
 	GLuint Program;
 
-	// Constructor reads and build the shader
+	// Constructor reads and builds the shader
 	Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	{
-		const GLchar* vertexCode = ShaderCodeFromFile(vertexPath, "vertex");
-		const GLchar* fragmentCode = ShaderCodeFromFile(fragmentPath, "fragment");
+		const GLchar* vertexCode = ShaderCodeFromFile(vertexPath, "vertex"); // The return value gets strange when returned...
+		const GLchar* fragmentCode = ShaderCodeFromFile(fragmentPath, "fragment"); 
 
 		GLuint vertexShader = CompileShader(vertexCode, "vertex");
 		GLuint fragmentShader = CompileShader(fragmentCode, "fragment");
@@ -52,6 +52,7 @@ private:
 			shaderStream << shaderFile.rdbuf();
 			shaderFile.close();
 			shaderCode = shaderStream.str();
+
 		}
 		catch (std::ifstream::failure e)
 		{

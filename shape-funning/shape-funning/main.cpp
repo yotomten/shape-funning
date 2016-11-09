@@ -10,6 +10,8 @@
 #include <GLFW/glfw3.h>
 // Should make it cross platform
 
+#include "Shader.h"
+
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 
@@ -90,9 +92,9 @@ void InitShaderProgram(GLuint &shaderProgram, GLuint vertexShader, GLuint fragme
 	}
 }
 
-void DrawPolygon(std::string type, const GLuint &shaderProgram, const GLuint &VAO, const bool &wireFramed)
+void DrawPolygon(std::string type, Shader shader, const GLuint &VAO, const bool &wireFramed)
 {
-	glUseProgram(shaderProgram);
+	shader.Use();
 	glBindVertexArray(VAO);
 
 	if (wireFramed)
@@ -214,7 +216,7 @@ int main()
 	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
 
 	// Compile shaders
-	GLuint vertexShader, fragmentShader;
+	/*GLuint vertexShader, fragmentShader;
 	InitShaders(vertexShader, fragmentShader);
 
 	// Attach shaders and link shader program
@@ -222,7 +224,10 @@ int main()
 	InitShaderProgram(shaderProgram, vertexShader, fragmentShader);
 	glUseProgram(shaderProgram);
 	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	glDeleteShader(fragmentShader);*/
+
+	Shader simpleShader("./shader.vert",
+		"./shader.frag");
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -234,7 +239,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		bool wireFramed = false;
-		DrawPolygon("triangle", shaderProgram, VAO, wireFramed);
+		DrawPolygon("triangle", simpleShader, VAO, wireFramed);
 
 		glfwSwapBuffers(window);
 	}
