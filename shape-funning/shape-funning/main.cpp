@@ -22,76 +22,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-// Shaders
-const GLchar* vertexShaderSource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 position;\n"
-"layout (location = 1) in vec3 color;\n"
-"out vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"gl_Position = vec4(position, 1.0);\n"
-"ourColor = color;\n"
-"}\0";
-
-const GLchar* fragmentShaderSource =
-"#version 330 core\n"
-"in vec3 ourColor;\n"
-"out vec4 color;\n"
-"void main()\n"
-"{\n"
-"color = vec4(ourColor, 1.0f);\n"
-"}\0";
-
-void	InitShaders(GLuint &vertexShader, GLuint &fragmentShader)
-{
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL); // 1 string, attach source code
-	glCompileShader(vertexShader);
-
-	// Check for compile errors
-	GLint vertexShaderSuccess;
-	GLchar infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vertexShaderSuccess); // Check if shader compilation successful
-	if (!vertexShaderSuccess)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	// Compile fragment shader
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	// Check for compile errors
-	GLint fragmentShaderSuccess;
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fragmentShaderSuccess); // Check if shader compilation successful
-	if (!fragmentShaderSuccess)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-}
-
-void InitShaderProgram(GLuint &shaderProgram, GLuint vertexShader, GLuint fragmentShader)
-{
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	// Check for link errors
-	GLint shaderProgramSuccess;
-	GLchar infoLog[512];
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &shaderProgramSuccess);
-	if (!shaderProgramSuccess)
-	{
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADEPROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-}
-
 void DrawPolygon(std::string type, Shader shader, const GLuint &VAO, const bool &wireFramed)
 {
 	shader.Use();
@@ -214,17 +144,6 @@ int main()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1); // Vertex attribute location is 1 for color
 	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
-
-	// Compile shaders
-	/*GLuint vertexShader, fragmentShader;
-	InitShaders(vertexShader, fragmentShader);
-
-	// Attach shaders and link shader program
-	GLuint shaderProgram;
-	InitShaderProgram(shaderProgram, vertexShader, fragmentShader);
-	glUseProgram(shaderProgram);
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);*/
 
 	Shader simpleShader("./shader.vert",
 		"./shader.frag");
