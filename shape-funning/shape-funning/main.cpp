@@ -10,6 +10,11 @@
 #include <GLFW/glfw3.h>
 // Should make it cross platform
 
+// glm
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Shader.h"
 
 // Window dimensions
@@ -22,7 +27,8 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-void DrawPolygon(std::string type, Shader shader, const GLuint &VAO, const bool &wireFramed)
+void DrawPolygon(std::string type, Shader shader,
+				 const GLuint &VAO, const bool &wireFramed)
 {
 	shader.Use();
 	glBindVertexArray(VAO);
@@ -93,8 +99,20 @@ bool InitGlfwAndGlew(GLFWwindow* &window)
 	return true;
 }
 
+void GlmPlay()
+{
+	glm::vec4 vec(1.0f, 0.0f, 0.0f, 0.0f);
+	std::cout << vec.x << vec.y << vec.z << std::endl;
+	glm::mat4 trans;
+	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+	vec = trans * vec;
+	std::cout << vec.x << vec.y << vec.z << std::endl;
+}
+
 int main()
 {
+	GlmPlay();
+
 	GLFWwindow* window;
 	bool initGlfwGlewSuccess;
 	initGlfwGlewSuccess = InitGlfwAndGlew(window);
