@@ -180,6 +180,7 @@ int main()
 		1, 2, 3		// Second triangle
 	};
 
+	// Init textures
 	GLuint texture1;
 	InitTexture("Images/stone.jpg", texture1);
 	GLuint texture2;
