@@ -22,8 +22,6 @@
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
-
-unsigned char* image;
 int textureWidth, textureHeight;
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -34,9 +32,11 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 }
 
 void DrawPolygon(std::string type, Shader shader,
-				 const GLuint &VAO, const bool &wireFramed)
+				 const GLuint &VAO, const bool &wireFramed,
+				 bool drawWithTexture, GLuint &texture)
 {
 	shader.Use();
+	if (drawWithTexture){ glBindTexture(GL_TEXTURE_2D, texture); }
 	glBindVertexArray(VAO);
 
 	if (wireFramed)
@@ -115,32 +115,35 @@ void GlmPlay()
 	std::cout << vec.x << vec.y << vec.z << std::endl;
 }
 
-void InitTexture(const char* path)
+void InitTexture(const char* path, GLuint &texture)
 {
 	unsigned char* image;
 
 	// Load image from file
-	try
+	image = SOIL_load_image(path, &textureWidth, &textureHeight, 0, SOIL_LOAD_RGB);
+	
+	if (image == NULL)
 	{
-		image = SOIL_load_image(path, &textureWidth, &textureHeight, 0, SOIL_LOAD_RGB);
-	}
-	catch (std::exception e)
-	{
-		std::cout << e.what() << std::endl;
+		std::cout << "Error: Failed to load image. " << std::endl;
 	}
 
+
+
 	// Generate texture
-	GLuint texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
+	// Set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// Set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0,
 				 GL_RGB, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0); // Unbind
-
-
 }
 
 
@@ -156,16 +159,11 @@ int main()
 	// Triangle vertices as normalized device coordinates
 
 	GLfloat vertices[] = {
-		// Positions         // Colors
-		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,   // Bottom Right
-		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   // Bottom Left
-		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f    // Top 
-	};
-
-	GLfloat texCoords[] = {
-		0.0f, 0.0f,  // Lower-left corner  
-		1.0f, 0.0f,  // Lower-right corner
-		0.5f, 1.0f   // Top-center corner
+		// Positions        // Colors			// Texture Coords
+		0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	1.0f, 1.0f,   // Top Right
+		0.5f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,	1.0f, 0.0f,   // Bottom Right
+		-0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f,	0.0f, 0.0f,   // Bottom Left
+		-0.5f, 0.5f, 0.0f,	1.0f, 1.0f, 0.0f,	0.0f, 1.0f    // Top Left 
 	};
 
 	GLuint indices[6] =
@@ -174,7 +172,8 @@ int main()
 		1, 2, 3		// Second triangle
 	};
 
-	InitTexture("Images/container.jpg");
+	GLuint texture;
+	InitTexture("Images/container.jpg", texture);
 
 	// Init triangle VBO to store vertices in GPU memory, rectangle EBO to index vertices
 	// and VAO to collect all states
@@ -194,7 +193,7 @@ int main()
 
 	// Specify how vertex data is to be interpreted...........................................
 	// Position attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
 																					  // Arg2 3 since position data vec3
 																					  // Arg4 false since already normalized values
 																					  // Arg5 Space between attribute sets
@@ -202,12 +201,17 @@ int main()
 	glEnableVertexAttribArray(0); // Vertex attribute location is 0 for position
 
 	// Color attributes
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1); // Vertex attribute location is 1 for color
+
+	// Texture attributes
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
+
 	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
 
-	Shader simpleShader("./shader.vert",
-		"./shader.frag");
+	Shader simpleShader("./shader.vert", "./shader.frag");
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -215,11 +219,12 @@ int main()
 		glfwPollEvents(); // Check if events have been activated
 
 		// Rendering commands
-		glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
+		glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		bool wireFramed = false;
-		DrawPolygon("triangle", simpleShader, VAO, wireFramed);
+		bool drawWithTexture = true;
+		DrawPolygon("rectangle", simpleShader, VAO, wireFramed, drawWithTexture, texture);
 
 		glfwSwapBuffers(window);
 	}
