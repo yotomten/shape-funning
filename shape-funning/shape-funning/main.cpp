@@ -15,6 +15,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+// SOIL
+#include <soil/SOIL.h>
+
 #include "Shader.h"
 
 // Window dimensions
@@ -125,6 +128,12 @@ int main()
 		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,   // Bottom Right
 		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   // Bottom Left
 		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f    // Top 
+	};
+
+	GLfloat texCoords[] = {
+		0.0f, 0.0f,  // Lower-left corner  
+		1.0f, 0.0f,  // Lower-right corner
+		0.5f, 1.0f   // Top-center corner
 	};
 
 	GLuint indices[6] =
