@@ -23,6 +23,9 @@
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 
+unsigned char* image;
+int textureWidth, textureHeight;
+
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 
@@ -112,6 +115,35 @@ void GlmPlay()
 	std::cout << vec.x << vec.y << vec.z << std::endl;
 }
 
+void InitTexture(const char* path)
+{
+	unsigned char* image;
+
+	// Load image from file
+	try
+	{
+		image = SOIL_load_image(path, &textureWidth, &textureHeight, 0, SOIL_LOAD_RGB);
+	}
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+
+	// Generate texture
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0,
+				 GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0); // Unbind
+
+
+}
+
+
 int main()
 {
 	GlmPlay();
@@ -141,6 +173,8 @@ int main()
 		0, 1, 3,	// First triangle
 		1, 2, 3		// Second triangle
 	};
+
+	InitTexture("Images/container.jpg");
 
 	// Init triangle VBO to store vertices in GPU memory, rectangle EBO to index vertices
 	// and VAO to collect all states
