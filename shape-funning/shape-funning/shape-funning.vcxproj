@@ -88,6 +88,8 @@
   <ItemGroup>
     <Image Include="Images\container.jpg" />
     <Image Include="Images\face.png" />
+    <Image Include="Images\medallion.jpg" />
+    <Image Include="Images\stone.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

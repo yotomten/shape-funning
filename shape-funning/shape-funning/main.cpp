@@ -181,9 +181,9 @@ int main()
 	};
 
 	GLuint texture1;
-	InitTexture("Images/container.jpg", texture1);
+	InitTexture("Images/stone.jpg", texture1);
 	GLuint texture2;
-	InitTexture("Images/face.png", texture2);
+	InitTexture("Images/medallion.jpg", texture2);
 
 
 	// Init triangle VBO to store vertices in GPU memory, rectangle EBO to index vertices
@@ -230,7 +230,7 @@ int main()
 		glfwPollEvents(); // Check if events have been activated
 
 		// Rendering commands
-		glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		bool wireFramed = false;

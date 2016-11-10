@@ -47,5 +47,11 @@
     <Image Include="Images\face.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Images\medallion.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Images\stone.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
