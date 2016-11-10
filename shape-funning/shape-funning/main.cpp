@@ -33,10 +33,20 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 
 void DrawPolygon(std::string type, Shader shader,
 				 const GLuint &VAO, const bool &wireFramed,
-				 bool drawWithTexture, GLuint &texture)
+				 bool drawWithTexture, GLuint &texture1, GLuint &texture2)
 {
 	shader.Use();
-	if (drawWithTexture){ glBindTexture(GL_TEXTURE_2D, texture); }
+	if (drawWithTexture)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		glUniform1i(glGetUniformLocation(shader.Program, "ourTexture1"), 0);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
+		glUniform1i(glGetUniformLocation(shader.Program, "ourTexture2"), 1);
+
+
+	}
 	glBindVertexArray(VAO);
 
 	if (wireFramed)
@@ -124,10 +134,8 @@ void InitTexture(const char* path, GLuint &texture)
 	
 	if (image == NULL)
 	{
-		std::cout << "Error: Failed to load image. " << std::endl;
+		std::cout << "Error: Failed to load image: " << path << std::endl;
 	}
-
-
 
 	// Generate texture
 	glGenTextures(1, &texture);
@@ -172,8 +180,11 @@ int main()
 		1, 2, 3		// Second triangle
 	};
 
-	GLuint texture;
-	InitTexture("Images/container.jpg", texture);
+	GLuint texture1;
+	InitTexture("Images/container.jpg", texture1);
+	GLuint texture2;
+	InitTexture("Images/face.png", texture2);
+
 
 	// Init triangle VBO to store vertices in GPU memory, rectangle EBO to index vertices
 	// and VAO to collect all states
@@ -224,7 +235,7 @@ int main()
 
 		bool wireFramed = false;
 		bool drawWithTexture = true;
-		DrawPolygon("rectangle", simpleShader, VAO, wireFramed, drawWithTexture, texture);
+		DrawPolygon("rectangle", simpleShader, VAO, wireFramed, drawWithTexture, texture1, texture2);
 
 		glfwSwapBuffers(window);
 	}
