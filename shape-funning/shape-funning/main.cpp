@@ -114,14 +114,14 @@ bool InitGlfwAndGlew(GLFWwindow* &window)
 	return true;
 }
 
-void InitSendTransformations(glm::mat4 trans, GLuint &transformLoc, Shader &shader)
+void SetTransformations(glm::mat4 trans, GLuint &transformLoc, Shader &shader, double time)
 {
-	trans = glm::rotate(trans, 90.0f, glm::vec3(0.0, 0.0, 1.0));
+	trans = glm::rotate(trans, (GLfloat)time * 50.0f, glm::vec3(0.0, 0.0, 1.0));
 	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
 
 	shader.Use();
 	transformLoc = glGetUniformLocation(shader.Program, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans)); // GL_FALSE means not transpose
 
 }
 
@@ -226,7 +226,7 @@ int main()
 	// Init transformations
 	glm::mat4 trans;
 	GLuint transformLoc;
-	InitSendTransformations(trans, transformLoc, simpleShader);
+	SetTransformations(trans, transformLoc, simpleShader, 0);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -236,6 +236,8 @@ int main()
 		// Rendering commands
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		SetTransformations(trans, transformLoc, simpleShader, glfwGetTime());
 
 		bool wireFramed = false;
 		bool drawWithTexture = true;
