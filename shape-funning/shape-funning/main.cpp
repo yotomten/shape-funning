@@ -114,25 +114,36 @@ bool InitGlfwAndGlew(GLFWwindow* &window)
 	return true;
 }
 
-void RotatePolygon(glm::mat4 trans, GLuint &transformLoc, Shader &shader, double time)
+void RotatePolygon(glm::mat4 model, GLuint &modelLoc, Shader &shader, double time)
 {
-	trans = glm::rotate(trans, (GLfloat)time * 50.0f, glm::vec3(0.0, 0.0, 1.0));
+	model = glm::rotate(model, (GLfloat)time * 50.0f, glm::vec3(0.0, 0.0, 1.0));
 
 	shader.Use();
-	transformLoc = glGetUniformLocation(shader.Program, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans)); // GL_FALSE means not transpose
+	modelLoc = glGetUniformLocation(shader.Program, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // GL_FALSE means not transpose
 
 }
 
-void InitPolygonTransformation(glm::mat4 &trans, GLuint &transformLoc,
-							   Shader &shader, GLfloat scale, GLfloat degrees)
+void InitGeometryTransformations(glm::mat4 &model, GLuint &modelLoc,
+							   Shader &shader, GLfloat scale, GLfloat degrees,
+							   glm::mat4 &view, GLuint &viewLoc, glm::mat4 &proj, GLuint &projLoc)
 {
-	trans = glm::rotate(trans, degrees, glm::vec3(0.0, 0.0, 1.0));
-	trans = glm::scale(trans, glm::vec3(scale, scale, scale));
+
+	proj = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	model = glm::rotate(model, degrees, glm::vec3(1.0, 0.0, 0.0));
+	model = glm::scale(model, glm::vec3(scale, scale, scale));
 
 	shader.Use();
-	transformLoc = glGetUniformLocation(shader.Program, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans)); // GL_FALSE means not transpose
+	modelLoc = glGetUniformLocation(shader.Program, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // GL_FALSE means not transpose
+
+	viewLoc = glGetUniformLocation(shader.Program, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+	projLoc = glGetUniformLocation(shader.Program, "proj");
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
 void InitTexture(const char* path, GLuint &texture)
@@ -233,10 +244,11 @@ int main()
 
 	Shader simpleShader("./shader.vert", "./shader.frag");
 
-	// Init transformations
-	glm::mat4 trans;
-	GLuint transformLoc;
-	InitPolygonTransformation(trans, transformLoc, simpleShader, 1.0f, 0.0f);
+	// Init transformations and matrices
+	glm::mat4 model, view, proj;
+	GLuint modelLoc, viewLoc, projLoc;
+	InitGeometryTransformations(model, modelLoc, simpleShader, 1.0f, -65.0f,
+							   view, viewLoc, proj, projLoc);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -248,7 +260,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Rotate quad over time
-		RotatePolygon(trans, transformLoc, simpleShader, glfwGetTime());
+		RotatePolygon(model, modelLoc, simpleShader, glfwGetTime());
 
 		bool wireFramed = false;
 		bool drawWithTexture = true;
