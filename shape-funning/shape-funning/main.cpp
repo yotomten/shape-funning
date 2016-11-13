@@ -114,15 +114,25 @@ bool InitGlfwAndGlew(GLFWwindow* &window)
 	return true;
 }
 
-void SetTransformations(glm::mat4 trans, GLuint &transformLoc, Shader &shader, double time)
+void RotatePolygon(glm::mat4 trans, GLuint &transformLoc, Shader &shader, double time)
 {
 	trans = glm::rotate(trans, (GLfloat)time * 50.0f, glm::vec3(0.0, 0.0, 1.0));
-	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
 
 	shader.Use();
 	transformLoc = glGetUniformLocation(shader.Program, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans)); // GL_FALSE means not transpose
 
+}
+
+void InitPolygonTransformation(glm::mat4 &trans, GLuint &transformLoc,
+							   Shader &shader, GLfloat scale, GLfloat degrees)
+{
+	trans = glm::rotate(trans, degrees, glm::vec3(0.0, 0.0, 1.0));
+	trans = glm::scale(trans, glm::vec3(scale, scale, scale));
+
+	shader.Use();
+	transformLoc = glGetUniformLocation(shader.Program, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans)); // GL_FALSE means not transpose
 }
 
 void InitTexture(const char* path, GLuint &texture)
@@ -226,7 +236,7 @@ int main()
 	// Init transformations
 	glm::mat4 trans;
 	GLuint transformLoc;
-	SetTransformations(trans, transformLoc, simpleShader, 0);
+	InitPolygonTransformation(trans, transformLoc, simpleShader, 1.0f, 0.0f);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -238,7 +248,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Rotate quad over time
-		SetTransformations(trans, transformLoc, simpleShader, glfwGetTime());
+		RotatePolygon(trans, transformLoc, simpleShader, glfwGetTime());
 
 		bool wireFramed = false;
 		bool drawWithTexture = true;
