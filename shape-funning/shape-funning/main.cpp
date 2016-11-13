@@ -67,6 +67,10 @@ void DrawPolygon(std::string type, Shader &shader,
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // Arg2 6 indices
 															 // Arg4 0 offset in EBO
 	}
+	else if (type == "cube")
+	{
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 	else
 	{
 		std::cout << "Wrong type of polygon in call to DrawPolygon(). " << std::endl;
@@ -116,7 +120,7 @@ bool InitGlfwAndGlew(GLFWwindow* &window)
 
 void RotatePolygon(glm::mat4 model, GLuint &modelLoc, Shader &shader, double time)
 {
-	model = glm::rotate(model, (GLfloat)time * 50.0f, glm::vec3(0.0, 0.0, 1.0));
+	model = glm::rotate(model, (GLfloat)time * 50.0f, glm::vec3(0.5, 1.0, 0.0));
 
 	shader.Use();
 	modelLoc = glGetUniformLocation(shader.Program, "model");
@@ -183,20 +187,64 @@ int main()
 	initGlfwGlewSuccess = InitGlfwAndGlew(window);
 	if (!initGlfwGlewSuccess) { return -1; }
 
-	// Triangle vertices as normalized device coordinates
+	// Vertices as normalized device coordinates
 
-	GLfloat vertices[] = {
+	/*GLfloat vertices[] = {
 		// Positions        // Colors			// Texture Coords
 		0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	1.0f, 1.0f,   // Top Right
 		0.5f, -0.5f, 0.0f,	1.0f, 0.0f, 1.0f,	1.0f, 0.0f,   // Bottom Right
 		-0.5f, -0.5f, 0.0f,	1.0f, 0.0f, 1.0f,	0.0f, 0.0f,   // Bottom Left
 		-0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	0.0f, 1.0f    // Top Left 
-	};
+	};*/
 
-	GLuint indices[6] =
+	/*GLuint indices[6] =
 	{
 		0, 1, 3,	// First triangle
 		1, 2, 3		// Second triangle
+	};*/
+
+	GLfloat vertices[] = {
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f
 	};
 
 	// Init textures
@@ -219,12 +267,12 @@ int main()
 																			   // GL_STATIC_DRAW since the data most likely
 																			   // will not change
 																			   // The VBO is stored in VAO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); // Stored in VAO
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); // Stored in VAO
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Specify how vertex data is to be interpreted...........................................
 	// Position attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
 																					  // Arg2 3 since position data vec3
 																					  // Arg4 false since already normalized values
 																					  // Arg5 Space between attribute sets
@@ -232,12 +280,12 @@ int main()
 	glEnableVertexAttribArray(0); // Vertex attribute location is 0 for position
 
 	// Color attributes
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1); // Vertex attribute location is 1 for color
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	//glEnableVertexAttribArray(1); // Vertex attribute location is 1 for color
 
 	// Texture attributes
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
@@ -250,6 +298,8 @@ int main()
 	InitGeometryTransformations(model, modelLoc, simpleShader, 1.0f, -65.0f,
 							   view, viewLoc, proj, projLoc);
 
+	glEnable(GL_DEPTH_TEST);
+
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -257,14 +307,14 @@ int main()
 
 		// Rendering commands
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Rotate quad over time
 		RotatePolygon(model, modelLoc, simpleShader, glfwGetTime());
 
 		bool wireFramed = false;
 		bool drawWithTexture = true;
-		DrawPolygon("rectangle", simpleShader, VAO, wireFramed, drawWithTexture, texture1, texture2);
+		DrawPolygon("cube", simpleShader, VAO, wireFramed, drawWithTexture, texture1, texture2);
 
 		glfwSwapBuffers(window);
 	}
