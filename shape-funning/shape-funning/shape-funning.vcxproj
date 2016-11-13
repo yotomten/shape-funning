@@ -69,19 +69,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Classes\Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Classes\Particle.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Classes\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="shape-funning.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.frag">
+    <None Include="Shaders\simpleShader.frag">
       <FileType>Document</FileType>
     </None>
-    <None Include="shader.vert">
+    <None Include="Shaders\simpleShader.vert">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

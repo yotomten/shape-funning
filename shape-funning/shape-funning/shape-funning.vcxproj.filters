@@ -18,12 +18,18 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="Classes\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -33,10 +39,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.vert">
+    <None Include="Shaders\simpleShader.frag">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="shader.frag">
+    <None Include="Shaders\simpleShader.vert">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

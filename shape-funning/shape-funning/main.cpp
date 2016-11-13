@@ -18,11 +18,13 @@
 // SOIL
 #include <soil/SOIL.h>
 
-#include "Shader.h"
+#include "Classes/Shader.h"
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 int textureWidth, textureHeight;
+
+#include "Classes/Particle.h"
 
 // Cube vertices
 static GLfloat vertices[] = {
@@ -281,7 +283,7 @@ int main()
 	GLuint VBO, VAO, EBO;
 	InitHandleVertexInformation(VBO, VAO, EBO);
 
-	Shader simpleShader("./shader.vert", "./shader.frag");
+	Shader simpleShader("./Shaders/simpleShader.vert", "./Shaders/simpleShader.frag");
 
 	// Init transformations and matrices
 	glm::mat4 model, view, proj;
