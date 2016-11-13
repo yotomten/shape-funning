@@ -31,7 +31,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-void DrawPolygon(std::string type, Shader shader,
+void DrawPolygon(std::string type, Shader &shader,
 				 const GLuint &VAO, const bool &wireFramed,
 				 bool drawWithTexture, GLuint &texture1, GLuint &texture2)
 {
@@ -44,9 +44,8 @@ void DrawPolygon(std::string type, Shader shader,
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
 		glUniform1i(glGetUniformLocation(shader.Program, "ourTexture2"), 1);
-
-
 	}
+
 	glBindVertexArray(VAO);
 
 	if (wireFramed)
@@ -115,14 +114,15 @@ bool InitGlfwAndGlew(GLFWwindow* &window)
 	return true;
 }
 
-void GlmPlay()
+void InitSendTransformations(glm::mat4 trans, GLuint &transformLoc, Shader &shader)
 {
-	glm::vec4 vec(1.0f, 0.0f, 0.0f, 0.0f);
-	std::cout << vec.x << vec.y << vec.z << std::endl;
-	glm::mat4 trans;
-	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
-	vec = trans * vec;
-	std::cout << vec.x << vec.y << vec.z << std::endl;
+	trans = glm::rotate(trans, 90.0f, glm::vec3(0.0, 0.0, 1.0));
+	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+
+	shader.Use();
+	transformLoc = glGetUniformLocation(shader.Program, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
 }
 
 void InitTexture(const char* path, GLuint &texture)
@@ -157,8 +157,6 @@ void InitTexture(const char* path, GLuint &texture)
 
 int main()
 {
-	GlmPlay();
-
 	GLFWwindow* window;
 	bool initGlfwGlewSuccess;
 	initGlfwGlewSuccess = InitGlfwAndGlew(window);
@@ -224,6 +222,11 @@ int main()
 	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
 
 	Shader simpleShader("./shader.vert", "./shader.frag");
+
+	// Init transformations
+	glm::mat4 trans;
+	GLuint transformLoc;
+	InitSendTransformations(trans, transformLoc, simpleShader);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
