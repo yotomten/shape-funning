@@ -24,6 +24,52 @@
 const GLuint WIDTH = 800, HEIGHT = 600;
 int textureWidth, textureHeight;
 
+// Cube vertices
+static GLfloat vertices[] = {
+	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+	0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+	0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+	0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+	-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+
+	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+	0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+	0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+	0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+	-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+	-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+	-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+	-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+	0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+	0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+	0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+	0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+	0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+	0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+	0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+	0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+	0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+	-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+	0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+	0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+	0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+	-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+	-0.5f, 0.5f, -0.5f, 0.0f, 1.0f
+};
+
+
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 
@@ -179,84 +225,12 @@ void InitTexture(const char* path, GLuint &texture)
 	glBindTexture(GL_TEXTURE_2D, 0); // Unbind
 }
 
-
-int main()
+void InitHandleVertexInformation(GLuint &VBO,GLuint &VAO,GLuint &EBO)
 {
-	GLFWwindow* window;
-	bool initGlfwGlewSuccess;
-	initGlfwGlewSuccess = InitGlfwAndGlew(window);
-	if (!initGlfwGlewSuccess) { return -1; }
-
-	// Vertices as normalized device coordinates
-
-	/*GLfloat vertices[] = {
-		// Positions        // Colors			// Texture Coords
-		0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	1.0f, 1.0f,   // Top Right
-		0.5f, -0.5f, 0.0f,	1.0f, 0.0f, 1.0f,	1.0f, 0.0f,   // Bottom Right
-		-0.5f, -0.5f, 0.0f,	1.0f, 0.0f, 1.0f,	0.0f, 0.0f,   // Bottom Left
-		-0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	0.0f, 1.0f    // Top Left 
-	};*/
-
-	/*GLuint indices[6] =
-	{
-		0, 1, 3,	// First triangle
-		1, 2, 3		// Second triangle
-	};*/
-
-	GLfloat vertices[] = {
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-
-		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f
-	};
-
-	// Init textures
-	GLuint texture1;
-	InitTexture("Images/stone.jpg", texture1);
-	GLuint texture2;
-	InitTexture("Images/medallion.jpg", texture2);
-
 
 	// Init triangle VBO to store vertices in GPU memory, rectangle EBO to index vertices
 	// and VAO to collect all states
-	GLuint VBO, VAO, EBO;
+
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);
@@ -264,9 +238,9 @@ int main()
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copies vertex data to GPU
-																			   // GL_STATIC_DRAW since the data most likely
-																			   // will not change
-																			   // The VBO is stored in VAO
+	// GL_STATIC_DRAW since the data most likely
+	// will not change
+	// The VBO is stored in VAO
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); // Stored in VAO
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
@@ -289,6 +263,23 @@ int main()
 	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
+}
+
+int main()
+{
+	GLFWwindow* window;
+	bool initGlfwGlewSuccess;
+	initGlfwGlewSuccess = InitGlfwAndGlew(window);
+	if (!initGlfwGlewSuccess) { return -1; }
+
+	// Init textures
+	GLuint texture1;
+	InitTexture("Images/stone.jpg", texture1);
+	GLuint texture2;
+	InitTexture("Images/medallion.jpg", texture2);
+
+	GLuint VBO, VAO, EBO;
+	InitHandleVertexInformation(VBO, VAO, EBO);
 
 	Shader simpleShader("./shader.vert", "./shader.frag");
 
@@ -306,7 +297,7 @@ int main()
 		glfwPollEvents(); // Check if events have been activated
 
 		// Rendering commands
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Rotate quad over time
