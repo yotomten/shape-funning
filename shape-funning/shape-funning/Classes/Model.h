@@ -8,7 +8,7 @@
 #include <vector>
 using namespace std;
 // GL Includes
-#include <GL/glew.h> // Contains all the necessery OpenGL includes
+#include <GL/glew.h> // Contains all the necessary OpenGL includes
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <soil/SOIL.h>

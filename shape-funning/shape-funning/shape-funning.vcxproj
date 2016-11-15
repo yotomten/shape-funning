@@ -82,6 +82,8 @@
     <ResourceCompile Include="shape-funning.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Models\nanosuit\nanosuit.blend" />
+    <None Include="Models\nanosuit\nanosuit.mtl" />
     <None Include="Shaders\simpleShader.frag">
       <FileType>Document</FileType>
     </None>
@@ -94,6 +96,31 @@
     <Image Include="Images\face.png" />
     <Image Include="Images\medallion.jpg" />
     <Image Include="Images\stone.jpg" />
+    <Image Include="Models\nanosuit\arm_dif.png" />
+    <Image Include="Models\nanosuit\arm_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\arm_showroom_spec.png" />
+    <Image Include="Models\nanosuit\body_dif.png" />
+    <Image Include="Models\nanosuit\body_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\body_showroom_spec.png" />
+    <Image Include="Models\nanosuit\glass_ddn.png" />
+    <Image Include="Models\nanosuit\glass_dif.png" />
+    <Image Include="Models\nanosuit\hand_dif.png" />
+    <Image Include="Models\nanosuit\hand_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\hand_showroom_spec.png" />
+    <Image Include="Models\nanosuit\helmet_diff.png" />
+    <Image Include="Models\nanosuit\helmet_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\helmet_showroom_spec.png" />
+    <Image Include="Models\nanosuit\leg_dif.png" />
+    <Image Include="Models\nanosuit\leg_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\leg_showroom_spec.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Models\nanosuit\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Models\nanosuit\nanosuit.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

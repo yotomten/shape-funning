@@ -18,13 +18,13 @@
 // SOIL
 #include <soil/SOIL.h>
 
+// GL includes
 #include "Classes/Shader.h"
+#include "Classes/Model.h"
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 int textureWidth, textureHeight;
-
-#include "Classes/Particle.h"
 
 // Cube vertices
 static GLfloat vertices[] = {
