@@ -72,6 +72,7 @@
     <ClCompile Include="Classes\Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Classes\Mesh.h" />
     <ClInclude Include="Classes\Particle.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Classes\Shader.h" />
