@@ -13,7 +13,7 @@ using namespace std;
 
 
 #include "Shader.h"
-#include <assimp/mesh.h>
+#include <assimp/types.h>
 
 struct Vertex {
 	// Position

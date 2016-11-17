@@ -26,51 +26,6 @@
 const GLuint WIDTH = 800, HEIGHT = 600;
 int textureWidth, textureHeight;
 
-// Cube vertices
-static GLfloat vertices[] = {
-	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-	0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-	0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-	0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-	-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-	0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-	0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-	0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-	-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-
-	-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-	-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-	-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-	0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-	0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-	0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-	0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-	0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-	0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-	0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-	0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-	0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-
-	-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-	0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-	0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-	0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-	-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-	-0.5f, 0.5f, -0.5f, 0.0f, 1.0f
-};
-
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -233,6 +188,8 @@ void InitHandleVertexInformation(GLuint &VBO,GLuint &VAO,GLuint &EBO)
 	// Init triangle VBO to store vertices in GPU memory, rectangle EBO to index vertices
 	// and VAO to collect all states
 
+	const GLuint* vertices[3]; // Just since model
+
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);
@@ -274,24 +231,27 @@ int main()
 	initGlfwGlewSuccess = InitGlfwAndGlew(window);
 	if (!initGlfwGlewSuccess) { return -1; }
 
+
+	glEnable(GL_DEPTH_TEST);
+
 	// Init textures
 	GLuint texture1;
 	InitTexture("Images/stone.jpg", texture1);
 	GLuint texture2;
 	InitTexture("Images/medallion.jpg", texture2);
 
-	GLuint VBO, VAO, EBO;
-	InitHandleVertexInformation(VBO, VAO, EBO);
+	//GLuint VBO, VAO, EBO;
+	//InitHandleVertexInformation(VBO, VAO, EBO);
 
-	Shader simpleShader("./Shaders/simpleShader.vert", "./Shaders/simpleShader.frag");
+	Shader modelShader("./Shaders/model_loading.vert", "./Shaders/model_loading.frag");
+
+	Model ourModel("./Models/nanosuit/nanosuit.obj");
 
 	// Init transformations and matrices
 	glm::mat4 model, view, proj;
 	GLuint modelLoc, viewLoc, projLoc;
-	InitGeometryTransformations(model, modelLoc, simpleShader, 1.0f, -65.0f,
+	InitGeometryTransformations(model, modelLoc, modelShader, 1.0f, -65.0f,
 							   view, viewLoc, proj, projLoc);
-
-	glEnable(GL_DEPTH_TEST);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -303,19 +263,22 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Rotate quad over time
-		RotatePolygon(model, modelLoc, simpleShader, glfwGetTime());
+		RotatePolygon(model, modelLoc, modelShader, glfwGetTime());
 
 		bool wireFramed = false;
 		bool drawWithTexture = true;
-		DrawPolygon("cube", simpleShader, VAO, wireFramed, drawWithTexture, texture1, texture2);
+
+		//DrawPolygon("cube", simpleShader, VAO, wireFramed, drawWithTexture, texture1, texture2);
+
+		ourModel.Draw(modelShader);
 
 		glfwSwapBuffers(window);
 	}
 
 	// Deallocate resources
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+	//glDeleteVertexArrays(1, &VAO);
+	//glDeleteBuffers(1, &VBO);
+	//glDeleteBuffers(1, &EBO);
 
 	glfwTerminate(); // Clear allocated resources
 	return 0;

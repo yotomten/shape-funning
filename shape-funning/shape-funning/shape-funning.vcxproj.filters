@@ -53,6 +53,8 @@
     </None>
     <None Include="Models\nanosuit\nanosuit.blend" />
     <None Include="Models\nanosuit\nanosuit.mtl" />
+    <None Include="Shaders\model_loading.vert" />
+    <None Include="Shaders\model_loading.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\container.jpg">

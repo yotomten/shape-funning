@@ -50,7 +50,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SOIL.lib;opengl32.lib;glfw3.lib;glew32s.lib;assimpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -84,6 +84,8 @@
   <ItemGroup>
     <None Include="Models\nanosuit\nanosuit.blend" />
     <None Include="Models\nanosuit\nanosuit.mtl" />
+    <None Include="Shaders\model_loading.frag" />
+    <None Include="Shaders\model_loading.vert" />
     <None Include="Shaders\simpleShader.frag">
       <FileType>Document</FileType>
     </None>
