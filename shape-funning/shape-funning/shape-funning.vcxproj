@@ -83,6 +83,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\batman\Batman.mtl" />
+    <None Include="Models\darkhorse\WAR.3ds" />
+    <None Include="Models\darkhorse\WAR.c4d" />
     <None Include="Models\ironman\IronMan.mtl" />
     <None Include="Models\ironman\v1_0_IronManRigged.max" />
     <None Include="Models\nanosuit\nanosuit.blend" />
@@ -90,6 +92,7 @@
     <None Include="Models\portalcube\Cube.FBX">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
+    <None Include="Models\spider\spider.mtl" />
     <None Include="Models\torus\torus.mtl" />
     <None Include="Models\yoda\yoda.3ds" />
     <None Include="Models\yoda\yoda.c4d" />
@@ -108,6 +111,38 @@
     <Image Include="Images\face.png" />
     <Image Include="Images\medallion.jpg" />
     <Image Include="Images\stone.jpg" />
+    <Image Include="Models\darkhorse\body.png" />
+    <Image Include="Models\darkhorse\Body_alpha.png" />
+    <Image Include="Models\darkhorse\body_nrm.png" />
+    <Image Include="Models\darkhorse\body_spec.png" />
+    <Image Include="Models\darkhorse\face.png" />
+    <Image Include="Models\darkhorse\face_illum.png" />
+    <Image Include="Models\darkhorse\face_nrm.png" />
+    <Image Include="Models\darkhorse\face_spec.png" />
+    <Image Include="Models\darkhorse\limbs.png" />
+    <Image Include="Models\darkhorse\Limbs_alpha.png" />
+    <Image Include="Models\darkhorse\limbs_illum.png" />
+    <Image Include="Models\darkhorse\limbs_nrm.png" />
+    <Image Include="Models\darkhorse\limbs_spec.png" />
+    <Image Include="Models\darkhorse\sword.png" />
+    <Image Include="Models\darkhorse\sword_nrm.png" />
+    <Image Include="Models\darkhorse\sword_spec.png" />
+    <Image Include="Models\darkhorse\tex\body.png" />
+    <Image Include="Models\darkhorse\tex\Body_alpha.png" />
+    <Image Include="Models\darkhorse\tex\body_nrm.png" />
+    <Image Include="Models\darkhorse\tex\body_spec.png" />
+    <Image Include="Models\darkhorse\tex\face.png" />
+    <Image Include="Models\darkhorse\tex\face_illum.png" />
+    <Image Include="Models\darkhorse\tex\face_nrm.png" />
+    <Image Include="Models\darkhorse\tex\face_spec.png" />
+    <Image Include="Models\darkhorse\tex\limbs.png" />
+    <Image Include="Models\darkhorse\tex\Limbs_alpha.png" />
+    <Image Include="Models\darkhorse\tex\limbs_illum.png" />
+    <Image Include="Models\darkhorse\tex\limbs_nrm.png" />
+    <Image Include="Models\darkhorse\tex\limbs_spec.png" />
+    <Image Include="Models\darkhorse\tex\sword.png" />
+    <Image Include="Models\darkhorse\tex\sword_nrm.png" />
+    <Image Include="Models\darkhorse\tex\sword_spec.png" />
     <Image Include="Models\nanosuit\arm_dif.png" />
     <Image Include="Models\nanosuit\arm_showroom_ddn.png" />
     <Image Include="Models\nanosuit\arm_showroom_spec.png" />
@@ -127,6 +162,7 @@
     <Image Include="Models\nanosuit\leg_showroom_spec.png" />
     <Image Include="Models\portalcube\cube.png" />
     <Image Include="Models\portalcube\cube_heart.dds" />
+    <Image Include="Models\spider\SpiderTex.jpg" />
     <Image Include="Models\yoda\body.png" />
     <Image Include="Models\yoda\body_b.png" />
     <Image Include="Models\yoda\body_s.png" />
@@ -149,10 +185,19 @@
     <Object Include="Models\batman\Batman.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Object>
+    <Object Include="Models\cube\cube.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\darkhorse\WAR.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
     <Object Include="Models\ironman\IronMan.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Object>
     <Object Include="Models\nanosuit\nanosuit.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\spider\spider.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Object>
     <Object Include="Models\torus\torus.obj">

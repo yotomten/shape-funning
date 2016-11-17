@@ -245,12 +245,12 @@ int main()
 
 	Shader modelShader("./Shaders/model_loading.vert", "./Shaders/model_loading.frag");
 
-	Model ourModel("./Models/nanosuit/nanosuit.obj");
+	Model ourModel("./Models/cube/cube.obj");
 
 	// Init transformations and matrices
 	glm::mat4 model, view, proj;
 	GLuint modelLoc, viewLoc, projLoc;
-	InitGeometryTransformations(model, modelLoc, modelShader, 1.0f, -65.0f,
+	InitGeometryTransformations(model, modelLoc, modelShader, 0.5f, -65.0f,
 							   view, viewLoc, proj, projLoc);
 
 	// Game loop

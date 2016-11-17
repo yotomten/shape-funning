@@ -63,6 +63,9 @@
     <None Include="Models\yoda\yoda.3ds" />
     <None Include="Models\yoda\yoda.c4d" />
     <None Include="Models\yoda\yoda.mtl" />
+    <None Include="Models\darkhorse\WAR.3ds" />
+    <None Include="Models\darkhorse\WAR.c4d" />
+    <None Include="Models\spider\spider.mtl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\container.jpg">
@@ -162,6 +165,105 @@
     <Image Include="Models\yoda\Eye.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Models\darkhorse\face_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\face_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\limbs.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\Limbs_alpha.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\limbs_illum.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\limbs_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\limbs_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\sword.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\sword_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\sword_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\body.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\Body_alpha.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\body_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\body_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\face.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\face_illum.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\body.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\Body_alpha.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\body_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\body_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\face.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\face_illum.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\face_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\face_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\limbs.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\Limbs_alpha.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\limbs_illum.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\limbs_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\limbs_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\sword.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\sword_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darkhorse\tex\sword_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\spider\SpiderTex.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Models\nanosuit\LICENSE.txt" />
@@ -174,5 +276,8 @@
     <Object Include="Models\ironman\IronMan.obj" />
     <Object Include="Models\batman\Batman.obj" />
     <Object Include="Models\yoda\yoda.obj" />
+    <Object Include="Models\darkhorse\WAR.obj" />
+    <Object Include="Models\spider\spider.obj" />
+    <Object Include="Models\cube\cube.obj" />
   </ItemGroup>
 </Project>
