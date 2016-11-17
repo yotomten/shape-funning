@@ -136,7 +136,7 @@ void InitGeometryTransformations(glm::mat4 &model, GLuint &modelLoc,
 							   glm::mat4 &view, GLuint &viewLoc, glm::mat4 &proj, GLuint &projLoc)
 {
 
-	proj = glm::perspective(75.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+	proj = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
 	model = glm::rotate(model, degrees, glm::vec3(1.0, 0.0, 0.0));
@@ -250,11 +250,13 @@ int main()
 	// Init transformations and matrices
 	glm::mat4 model, view, proj;
 	GLuint modelLoc, viewLoc, projLoc;
-	InitGeometryTransformations(model, modelLoc, modelShader, 0.5f, -65.0f,
+	InitGeometryTransformations(model, modelLoc, modelShader, 1.0f, -65.0f,
 							   view, viewLoc, proj, projLoc);
 
 	// Ugly deformation
 	int firstIteration = 1;
+	double oldTime= 0;
+	double currentTime;
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -276,9 +278,13 @@ int main()
 		}
 		firstIteration++;
 
-
-
-
+		if (firstIteration > 300)
+		{
+			currentTime = glfwGetTime();
+			double timeDiff = currentTime - oldTime;
+			ourModel.RestoreDeformedModel(timeDiff);
+			oldTime = currentTime;
+		}
 
 		//DrawPolygon("cube", simpleShader, VAO, wireFramed, drawWithTexture, texture1, texture2);
 		ourModel.Draw(modelShader);

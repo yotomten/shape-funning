@@ -22,6 +22,9 @@ struct Vertex {
 	glm::vec3 Normal;
 	// TexCoords
 	glm::vec2 TexCoords;
+
+	// Velocity
+	glm::vec3 Velocity;
 };
 
 struct Texture {

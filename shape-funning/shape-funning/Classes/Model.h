@@ -43,32 +43,56 @@ public:
 		{
 			for (GLuint j = 0; j < 24; j++)
 			{
-				if (meshes[i].vertices[j].Position.y > 0)
+				if (this->meshes[i].vertices[j].Position.y > 0)
 				{
-					this->meshes[i].vertices[j].Position.y -= 0.3;
+					this->meshes[i].vertices[j].Position.y -= 0.3f;
 				}
 
 			}
 
-			meshes[i].setupMesh();
+			this->meshes[i].setupMesh();
 		}
 	}
 
-	void RestoreDeformedModel()
+	void RestoreDeformedModel(double time)
 	{
 		for (GLuint i = 0; i < this->meshes.size(); i++)
 		{
 			for (GLuint j = 0; j < 24; j++)
 			{
-				if (meshes[i].vertices[j].Position.y > 0)
+				if (this->meshes[i].vertices[j].Position.y > 0)
 				{
+					glm::vec3 goalPos;
+					if (this->meshes[i].vertices[j].Position.x > 0 && this->meshes[i].vertices[j].Position.z > 0)
+					{
+						goalPos = glm::vec3(0.5f, 0.5f, 0.5f);
+					}
+					else if (this->meshes[i].vertices[j].Position.x > 0 && this->meshes[i].vertices[j].Position.z < 0)
+					{
+						goalPos = glm::vec3(0.5f, 0.5f, -0.5f);
+					}
+					else if (this->meshes[i].vertices[j].Position.x	< 0 && this->meshes[i].vertices[j].Position.z > 0)
+					{
+						goalPos = glm::vec3(-0.5f, 0.5f, 0.5f);
+					}
+					else if (this->meshes[i].vertices[j].Position.x < 0 && this->meshes[i].vertices[j].Position.z < 0)
+					{
+						goalPos = glm::vec3(-0.5f, 0.5f, -0.5f);
+					}
 
-					//this->meshes[i].vertices[j].Position.y += h * velocity;
+					// Update velocity
+					double alpha = 0.2;
+					double velScale = alpha / time;
+					GLfloat velSc = (GLfloat)velScale;
+					this->meshes[i].vertices[j].Velocity.y += velSc * (goalPos.y - this->meshes[i].vertices[j].Position.y);
+					GLfloat velocity = this->meshes[i].vertices[j].Velocity.y;
+					
+					//Update position
+					this->meshes[i].vertices[j].Position.y += (GLfloat)time * velocity;
 				}
 
 			}
-
-			meshes[i].setupMesh();
+			this->meshes[i].setupMesh();
 		}
 	}
 
@@ -152,6 +176,12 @@ private:
 			else
 				vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 			vertices.push_back(vertex);
+
+
+			// Vertex velocity
+			glm::vec3 velVector; // Zero vector
+			vertex.Velocity = velVector;
+
 		}
 		// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
 		for (GLuint i = 0; i < mesh->mNumFaces; i++)
