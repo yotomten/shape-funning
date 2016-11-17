@@ -253,6 +253,9 @@ int main()
 	InitGeometryTransformations(model, modelLoc, modelShader, 0.5f, -65.0f,
 							   view, viewLoc, proj, projLoc);
 
+	// Ugly deformation
+	int firstIteration = 1;
+
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -264,12 +267,20 @@ int main()
 
 		// Rotate quad over time
 		RotatePolygon(model, modelLoc, modelShader, glfwGetTime());
+		//bool wireFramed = false;
+		//bool drawWithTexture = true;
 
-		bool wireFramed = false;
-		bool drawWithTexture = true;
+		if (firstIteration == 100)
+		{
+			ourModel.DeformModel();
+		}
+		firstIteration++;
+
+
+
+
 
 		//DrawPolygon("cube", simpleShader, VAO, wireFramed, drawWithTexture, texture1, texture2);
-
 		ourModel.Draw(modelShader);
 
 		glfwSwapBuffers(window);

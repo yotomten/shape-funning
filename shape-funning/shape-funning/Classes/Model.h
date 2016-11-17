@@ -37,6 +37,41 @@ public:
 			this->meshes[i].Draw(shader);
 	}
 
+	void DeformModel()
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			for (GLuint j = 0; j < 24; j++)
+			{
+				if (meshes[i].vertices[j].Position.y > 0)
+				{
+					this->meshes[i].vertices[j].Position.y -= 0.3;
+				}
+
+			}
+
+			meshes[i].setupMesh();
+		}
+	}
+
+	void RestoreDeformedModel()
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			for (GLuint j = 0; j < 24; j++)
+			{
+				if (meshes[i].vertices[j].Position.y > 0)
+				{
+
+					//this->meshes[i].vertices[j].Position.y += h * velocity;
+				}
+
+			}
+
+			meshes[i].setupMesh();
+		}
+	}
+
 private:
 	/*  Model Data  */
 	vector<Mesh> meshes;

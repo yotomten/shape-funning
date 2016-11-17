@@ -89,7 +89,7 @@ public:
 		}
 	}
 
-private:
+//private:
 	/*  Render data  */
 	GLuint VAO, VBO, EBO;
 
