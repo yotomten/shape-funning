@@ -136,7 +136,7 @@ void InitGeometryTransformations(glm::mat4 &model, GLuint &modelLoc,
 							   glm::mat4 &view, GLuint &viewLoc, glm::mat4 &proj, GLuint &projLoc)
 {
 
-	proj = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+	proj = glm::perspective(75.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
 	model = glm::rotate(model, degrees, glm::vec3(1.0, 0.0, 0.0));

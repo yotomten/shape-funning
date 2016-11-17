@@ -82,8 +82,18 @@
     <ResourceCompile Include="shape-funning.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Models\batman\Batman.mtl" />
+    <None Include="Models\ironman\IronMan.mtl" />
+    <None Include="Models\ironman\v1_0_IronManRigged.max" />
     <None Include="Models\nanosuit\nanosuit.blend" />
     <None Include="Models\nanosuit\nanosuit.mtl" />
+    <None Include="Models\portalcube\Cube.FBX">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Models\torus\torus.mtl" />
+    <None Include="Models\yoda\yoda.3ds" />
+    <None Include="Models\yoda\yoda.c4d" />
+    <None Include="Models\yoda\yoda.mtl" />
     <None Include="Shaders\model_loading.frag" />
     <None Include="Shaders\model_loading.vert" />
     <None Include="Shaders\simpleShader.frag">
@@ -115,12 +125,40 @@
     <Image Include="Models\nanosuit\leg_dif.png" />
     <Image Include="Models\nanosuit\leg_showroom_ddn.png" />
     <Image Include="Models\nanosuit\leg_showroom_spec.png" />
+    <Image Include="Models\portalcube\cube.png" />
+    <Image Include="Models\portalcube\cube_heart.dds" />
+    <Image Include="Models\yoda\body.png" />
+    <Image Include="Models\yoda\body_b.png" />
+    <Image Include="Models\yoda\body_s.png" />
+    <Image Include="Models\yoda\Eye.jpg" />
+    <Image Include="Models\yoda\Head.jpg" />
+    <Image Include="Models\yoda\Head_b.jpg" />
+    <Image Include="Models\yoda\Head_s.jpg" />
+    <Image Include="Models\yoda\Limbs.jpg" />
+    <Image Include="Models\yoda\Limbs_b.jpg" />
+    <Image Include="Models\yoda\Stick.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Models\nanosuit\LICENSE.txt" />
+    <Text Include="Models\yoda\credit.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Object Include="..\..\..\..\OpenGL\Models\jzb865er6v-IronMan\IronMan\IronMan.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\batman\Batman.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\ironman\IronMan.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
     <Object Include="Models\nanosuit\nanosuit.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\torus\torus.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\yoda\yoda.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Object>
   </ItemGroup>

@@ -55,6 +55,14 @@
     <None Include="Models\nanosuit\nanosuit.mtl" />
     <None Include="Shaders\model_loading.vert" />
     <None Include="Shaders\model_loading.frag" />
+    <None Include="Models\torus\torus.mtl" />
+    <None Include="Models\ironman\v1_0_IronManRigged.max" />
+    <None Include="Models\ironman\IronMan.mtl" />
+    <None Include="Models\portalcube\Cube.FBX" />
+    <None Include="Models\batman\Batman.mtl" />
+    <None Include="Models\yoda\yoda.3ds" />
+    <None Include="Models\yoda\yoda.c4d" />
+    <None Include="Models\yoda\yoda.mtl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\container.jpg">
@@ -120,11 +128,51 @@
     <Image Include="Models\nanosuit\hand_dif.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Models\portalcube\cube.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\portalcube\cube_heart.dds" />
+    <Image Include="Models\yoda\Head.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Head_b.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Head_s.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Limbs.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Limbs_b.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Stick.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\body.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\body_b.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\body_s.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Eye.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Models\nanosuit\LICENSE.txt" />
+    <Text Include="Models\yoda\credit.txt" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="Models\nanosuit\nanosuit.obj" />
+    <Object Include="..\..\..\..\OpenGL\Models\jzb865er6v-IronMan\IronMan\IronMan.obj" />
+    <Object Include="Models\torus\torus.obj" />
+    <Object Include="Models\ironman\IronMan.obj" />
+    <Object Include="Models\batman\Batman.obj" />
+    <Object Include="Models\yoda\yoda.obj" />
   </ItemGroup>
 </Project>
