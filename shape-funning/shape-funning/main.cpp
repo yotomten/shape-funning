@@ -231,21 +231,11 @@ int main()
 	initGlfwGlewSuccess = InitGlfwAndGlew(window);
 	if (!initGlfwGlewSuccess) { return -1; }
 
-
 	glEnable(GL_DEPTH_TEST);
-
-	// Init textures
-	GLuint texture1;
-	InitTexture("Images/stone.jpg", texture1);
-	GLuint texture2;
-	InitTexture("Images/medallion.jpg", texture2);
-
-	//GLuint VBO, VAO, EBO;
-	//InitHandleVertexInformation(VBO, VAO, EBO);
 
 	Shader modelShader("./Shaders/model_loading.vert", "./Shaders/model_loading.frag");
 
-	Model ourModel("./Models/cube/cube.obj");
+	Model ourModel("./Models/nanosuit/nanosuit.obj");
 
 	// Init transformations and matrices
 	glm::mat4 model, view, proj;
@@ -267,12 +257,10 @@ int main()
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Rotate quad over time
+		// Rotate over time
 		RotatePolygon(model, modelLoc, modelShader, glfwGetTime());
-		//bool wireFramed = false;
-		//bool drawWithTexture = true;
 
-		if (firstIteration == 100)
+		/*if (firstIteration == 100)
 		{
 			ourModel.DeformModel();
 		}
@@ -284,19 +272,11 @@ int main()
 			double timeDiff = currentTime - oldTime;
 			ourModel.RestoreDeformedModel(timeDiff);
 			oldTime = currentTime;
-		}
-
-		//DrawPolygon("cube", simpleShader, VAO, wireFramed, drawWithTexture, texture1, texture2);
+		}*/
 		ourModel.Draw(modelShader);
 
 		glfwSwapBuffers(window);
 	}
-
-	// Deallocate resources
-	//glDeleteVertexArrays(1, &VAO);
-	//glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);
-
 	glfwTerminate(); // Clear allocated resources
 	return 0;
 }
