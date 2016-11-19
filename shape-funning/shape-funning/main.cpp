@@ -26,6 +26,7 @@
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 
+// For SOIL
 int textureWidth, textureHeight;
 
 // Function prototypes
@@ -42,54 +43,6 @@ bool firstMouse = true;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
-
-void DrawPolygon(std::string type, Shader &shader,
-				 const GLuint &VAO, const bool &wireFramed,
-				 bool drawWithTexture, GLuint &texture1, GLuint &texture2)
-{
-	shader.Use();
-	if (drawWithTexture)
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		glUniform1i(glGetUniformLocation(shader.Program, "ourTexture1"), 0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-		glUniform1i(glGetUniformLocation(shader.Program, "ourTexture2"), 1);
-	}
-
-	glBindVertexArray(VAO);
-
-	if (wireFramed)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	else
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-
-	if (type == "triangle")
-	{
-		glDrawArrays(GL_TRIANGLES, 0, 3); // Arg1 0 start index of vertex array
-										  // Arg2 3 vertices are to be drawn
-	}
-	else if (type == "rectangle")
-	{
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // Arg2 6 indices
-															 // Arg4 0 offset in EBO
-	}
-	else if (type == "cube")
-	{
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-	}
-	else
-	{
-		std::cout << "Wrong type of polygon in call to DrawPolygon(). " << std::endl;
-	}
-
-	glBindVertexArray(0);
-}
 
 bool InitGlfwAndGlew(GLFWwindow* &window)
 {
@@ -139,7 +92,7 @@ bool InitGlfwAndGlew(GLFWwindow* &window)
 	return true;
 }
 
-void RotatePolygon(glm::mat4 model, GLuint &modelLoc, Shader &shader, double time)
+void RotateModel(glm::mat4 model, GLuint &modelLoc, Shader &shader, double time)
 {
 	model = glm::rotate(model, (GLfloat)time * 50.0f, glm::vec3(0.5, 1.0, 0.0));
 
@@ -169,6 +122,30 @@ void InitGeometryTransformations(glm::mat4 &model, GLuint &modelLoc,
 
 	projLoc = glGetUniformLocation(shader.Program, "proj");
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+}
+
+void UpdateTransformations(glm::mat4 &model, GLuint &modelLoc,
+						   glm::mat4 &view, GLuint &viewLoc,
+						   glm::mat4 &proj, GLuint &projLoc,
+						   Shader &shader)
+{
+	// Create camera transformation
+	view = camera.GetViewMatrix();
+	proj = glm::perspective(camera.Zoom, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	shader.Use();
+	// Get the uniform locations and pass the matrices to the shader
+
+	modelLoc = glGetUniformLocation(shader.Program, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // GL_FALSE means not transpose
+
+	viewLoc = glGetUniformLocation(shader.Program, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+	projLoc = glGetUniformLocation(shader.Program, "proj");
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
 }
 
 void InitTexture(const char* path, GLuint &texture)
@@ -255,22 +232,20 @@ int main()
 
 	Model ourModel("./Models/nanosuit/nanosuit.obj");
 
-	// Init transformations and matrices
+	// Init transformations
 	glm::mat4 model, view, proj;
 	GLuint modelLoc, viewLoc, projLoc;
-	InitGeometryTransformations(model, modelLoc, modelShader, 0.2f, -65.0f,
-							   view, viewLoc, proj, projLoc);
 
 	// Ugly deformation
-	int firstIteration = 1;
+	/*int firstIteration = 1;
 	double oldTime= 0;
-	double currentTime;
+	double currentTime;*/
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Set frame time
-		GLfloat currentFrame = glfwGetTime();
+		GLfloat currentFrame = (GLfloat)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
@@ -281,20 +256,10 @@ int main()
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Rotate over time
-		RotatePolygon(model, modelLoc, modelShader, glfwGetTime());
-
-		// Create camera transformation
-		view = camera.GetViewMatrix();
-		proj = glm::perspective(camera.Zoom, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
-
-		// Get the uniform locations
-		modelLoc = glGetUniformLocation(modelShader.Program, "model");
-		viewLoc = glGetUniformLocation(modelShader.Program, "view");
-		projLoc = glGetUniformLocation(modelShader.Program, "proj");
-		// Pass the matrices to the shader
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+		UpdateTransformations(model, modelLoc,
+							  view, viewLoc,
+							  proj, projLoc,
+							  modelShader);
 
 		/*if (firstIteration == 100)
 		{
@@ -309,6 +274,7 @@ int main()
 			ourModel.RestoreDeformedModel(timeDiff);
 			oldTime = currentTime;
 		}*/
+
 		ourModel.Draw(modelShader);
 
 		glfwSwapBuffers(window);
@@ -316,7 +282,6 @@ int main()
 	glfwTerminate(); // Clear allocated resources
 	return 0;
 }
-
 
 // Moves/alters the camera positions based on user input
 void DoMovement()
@@ -346,28 +311,31 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	}
 }
 
-void MouseCallback(GLFWwindow* window, double xpos, double ypos)
+void MouseCallback(GLFWwindow* window, double xPosition, double yPosition)
 {
+	GLfloat xPos = (GLfloat)xPosition;
+	GLfloat yPos = (GLfloat)yPosition;
+
 	if (firstMouse)
 	{
-		lastX = xpos;
-		lastY = ypos;
+		lastX = xPos;
+		lastY = yPos;
 		firstMouse = false;
 	}
 
-	GLfloat xoffset = xpos - lastX;
-	GLfloat yoffset = lastY - ypos;  // Reversed since y-coordinates go from bottom to left
+	GLfloat xoffset = xPos - lastX;
+	GLfloat yoffset = lastY - yPos;  // Reversed since y-coordinates go from bottom to left
 
-	lastX = xpos;
-	lastY = ypos;
+	lastX = xPos;
+	lastY = yPos;
 
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 
-void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
-	camera.ProcessMouseScroll(yoffset);
+	camera.ProcessMouseScroll((GLfloat)yOffset);
 }
 
 
