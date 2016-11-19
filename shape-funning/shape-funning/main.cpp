@@ -240,7 +240,7 @@ int main()
 	// Init transformations and matrices
 	glm::mat4 model, view, proj;
 	GLuint modelLoc, viewLoc, projLoc;
-	InitGeometryTransformations(model, modelLoc, modelShader, 1.0f, -65.0f,
+	InitGeometryTransformations(model, modelLoc, modelShader, 0.2f, -65.0f,
 							   view, viewLoc, proj, projLoc);
 
 	// Ugly deformation
