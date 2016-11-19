@@ -41,56 +41,38 @@ public:
 	{
 		for (GLuint i = 0; i < this->meshes.size(); i++)
 		{
-			for (GLuint j = 0; j < 24; j++)
+			for (GLuint j = 0; j < meshes[i].vertices.size(); j++)
 			{
-				if (this->meshes[i].vertices[j].Position.y > 0)
+				if (this->meshes[i].vertices[j].Position.y > 10.0f)
 				{
-					this->meshes[i].vertices[j].Position.y -= 0.3f;
+					this->meshes[i].vertices[j].Position.y -= 1.0f;
 				}
-
+					
 			}
 
 			this->meshes[i].setupMesh();
 		}
 	}
 
-	void RestoreDeformedModel(double time)
+	void RestoreDeformedModel(Model &referenceModel, double time)
 	{
+		double alpha = 0.2;
+		double velScale = alpha / time;
+		GLfloat velSc = (GLfloat)velScale;
+		glm::vec3 goalPos;
+
 		for (GLuint i = 0; i < this->meshes.size(); i++)
 		{
-			for (GLuint j = 0; j < 24; j++)
+			for (GLuint j = 0; j < meshes[i].vertices.size(); j++)
 			{
-				if (this->meshes[i].vertices[j].Position.y > 0)
-				{
-					glm::vec3 goalPos;
-					if (this->meshes[i].vertices[j].Position.x > 0 && this->meshes[i].vertices[j].Position.z > 0)
-					{
-						goalPos = glm::vec3(0.5f, 0.5f, 0.5f);
-					}
-					else if (this->meshes[i].vertices[j].Position.x > 0 && this->meshes[i].vertices[j].Position.z < 0)
-					{
-						goalPos = glm::vec3(0.5f, 0.5f, -0.5f);
-					}
-					else if (this->meshes[i].vertices[j].Position.x	< 0 && this->meshes[i].vertices[j].Position.z > 0)
-					{
-						goalPos = glm::vec3(-0.5f, 0.5f, 0.5f);
-					}
-					else if (this->meshes[i].vertices[j].Position.x < 0 && this->meshes[i].vertices[j].Position.z < 0)
-					{
-						goalPos = glm::vec3(-0.5f, 0.5f, -0.5f);
-					}
+				goalPos = referenceModel.meshes[i].vertices[j].Position;
 
-					// Update velocity
-					double alpha = 0.2;
-					double velScale = alpha / time;
-					GLfloat velSc = (GLfloat)velScale;
-					this->meshes[i].vertices[j].Velocity.y += velSc * (goalPos.y - this->meshes[i].vertices[j].Position.y);
-					GLfloat velocity = this->meshes[i].vertices[j].Velocity.y;
-					
-					//Update position
-					this->meshes[i].vertices[j].Position.y += (GLfloat)time * velocity;
-				}
+				// Update velocity
+				this->meshes[i].vertices[j].Velocity.y += velSc * (goalPos.y - this->meshes[i].vertices[j].Position.y);
+				GLfloat velocity = this->meshes[i].vertices[j].Velocity.y;
 
+				//Update position
+				this->meshes[i].vertices[j].Position.y += (GLfloat)time * velocity;
 			}
 			this->meshes[i].setupMesh();
 		}

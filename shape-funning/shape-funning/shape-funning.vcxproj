@@ -83,7 +83,6 @@
     <ResourceCompile Include="shape-funning.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="biytxjd4.x1z" />
     <None Include="Models\batman\Batman.mtl" />
     <None Include="Models\darksiders\WAR.3ds" />
     <None Include="Models\darksiders\WAR.c4d" />

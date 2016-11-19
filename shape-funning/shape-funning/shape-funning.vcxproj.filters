@@ -71,7 +71,6 @@
     <None Include="Models\darksiders\WAR.c4d" />
     <None Include="Models\rubik\RubiksCube.mtl" />
     <None Include="Models\rubik\RubiksCube.3ds" />
-    <None Include="biytxjd4.x1z" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\container.jpg">

@@ -36,7 +36,7 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 void DoMovement();
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 10.0f, 10.0f));
 bool keys[1024];
 GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
@@ -219,70 +219,6 @@ void InitHandleVertexInformation(GLuint &VBO,GLuint &VAO,GLuint &EBO)
 	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
 }
 
-int main()
-{
-	GLFWwindow* window;
-	bool initGlfwGlewSuccess;
-	initGlfwGlewSuccess = InitGlfwAndGlew(window);
-	if (!initGlfwGlewSuccess) { return -1; }
-
-	glEnable(GL_DEPTH_TEST);
-
-	Shader modelShader("./Shaders/model_loading.vert", "./Shaders/model_loading.frag");
-
-	Model ourModel("./Models/nanosuit/nanosuit.obj");
-
-	// Init transformations
-	glm::mat4 model, view, proj;
-	GLuint modelLoc, viewLoc, projLoc;
-
-	// Ugly deformation
-	/*int firstIteration = 1;
-	double oldTime= 0;
-	double currentTime;*/
-
-	// Game loop
-	while (!glfwWindowShouldClose(window))
-	{
-		// Set frame time
-		GLfloat currentFrame = (GLfloat)glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-
-		glfwPollEvents(); // Check if events have been activated
-		DoMovement();
-
-		// Rendering commands
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		UpdateTransformations(model, modelLoc,
-							  view, viewLoc,
-							  proj, projLoc,
-							  modelShader);
-
-		/*if (firstIteration == 100)
-		{
-			ourModel.DeformModel();
-		}
-		firstIteration++;
-
-		if (firstIteration > 300)
-		{
-			currentTime = glfwGetTime();
-			double timeDiff = currentTime - oldTime;
-			ourModel.RestoreDeformedModel(timeDiff);
-			oldTime = currentTime;
-		}*/
-
-		ourModel.Draw(modelShader);
-
-		glfwSwapBuffers(window);
-	}
-	glfwTerminate(); // Clear allocated resources
-	return 0;
-}
-
 // Moves/alters the camera positions based on user input
 void DoMovement()
 {
@@ -338,5 +274,67 @@ void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 	camera.ProcessMouseScroll((GLfloat)yOffset);
 }
 
+bool restore = false;
+void HandleDeformation(Model &ourModel, Model &referenceModel, GLfloat time)
+{
+	if (keys[GLFW_KEY_R])
+	{
+		ourModel.DeformModel();
+		restore = false;
+	}
+	if (keys[GLFW_KEY_T])
+		restore = true;
+}
 
+int main()
+{
+	GLFWwindow* window;
+	bool initGlfwGlewSuccess;
+	initGlfwGlewSuccess = InitGlfwAndGlew(window);
+	if (!initGlfwGlewSuccess) { return -1; }
+
+	glEnable(GL_DEPTH_TEST);
+
+	Shader modelShader("./Shaders/model_loading.vert", "./Shaders/model_loading.frag");
+
+	Model ourModel("./Models/nanosuit/nanosuit.obj");
+	Model referenceModel = ourModel;
+
+	// Init transformations
+	glm::mat4 model, view, proj;
+	GLuint modelLoc, viewLoc, projLoc;
+
+	// Game loop
+	while (!glfwWindowShouldClose(window))
+	{
+		// Set frame time
+		GLfloat currentFrame = (GLfloat)glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		glfwPollEvents(); // Check if events have been activated
+		DoMovement();
+
+		// Rendering commands
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		HandleDeformation(ourModel, referenceModel, deltaTime);
+		if (restore)
+		{
+			ourModel.RestoreDeformedModel(referenceModel, deltaTime);
+		}
+
+		UpdateTransformations(model, modelLoc,
+			view, viewLoc,
+			proj, projLoc,
+			modelShader);
+
+		ourModel.Draw(modelShader);
+
+		glfwSwapBuffers(window);
+	}
+	glfwTerminate(); // Clear allocated resources
+	return 0;
+}
 
