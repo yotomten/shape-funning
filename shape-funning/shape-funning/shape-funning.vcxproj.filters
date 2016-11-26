@@ -71,6 +71,10 @@
     <None Include="Models\darksiders\WAR.c4d" />
     <None Include="Models\rubik\RubiksCube.mtl" />
     <None Include="Models\rubik\RubiksCube.3ds" />
+    <None Include="Models\Crate\Crate1.3ds" />
+    <None Include="Models\Crate\Crate1.blend" />
+    <None Include="Models\Crate\Crate1.mtl" />
+    <None Include="Models\Crate\Crate1.obj" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\container.jpg">
@@ -267,6 +271,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Models\darksiders\sword_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\Crate\crate_1.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

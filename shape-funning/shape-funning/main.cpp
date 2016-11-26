@@ -47,8 +47,8 @@ bool firstMouse = true;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
-GLfloat dampingConstant = 0.5f;
-GLfloat alpha = 0.5f;
+GLfloat dampingConstant = 0.15f;
+GLfloat alpha = 0.15f;
 bool restore = false;
 
 bool InitGlfwAndGlew(GLFWwindow* &window)
@@ -337,7 +337,7 @@ int main()
 
 	Shader modelShader("./Shaders/model_loading.vert", "./Shaders/model_loading.frag");
 
-	Model ourModel("./Models/nanosuit/nanosuit.obj");
+	Model ourModel("./Models/Crate/Crate1.obj");
 	Model referenceModel = ourModel;
 
 	// Init transformations

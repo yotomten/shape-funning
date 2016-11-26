@@ -43,11 +43,27 @@ public:
 		{
 			for (GLuint j = 0; j < meshes[i].vertices.size(); j++)
 			{
-				if (this->meshes[i].vertices[j].Position.y > 12.0f)
+				if (this->meshes[i].vertices[j].Position.y < 0)
+				{
+					this->meshes[i].vertices[j].Position.y += 0.02f;
+				}
+				else
 				{
 					this->meshes[i].vertices[j].Position.y -= 0.02f;
 				}
-					
+
+				if (this->meshes[i].vertices[j].Position.x < 0)
+				{
+					this->meshes[i].vertices[j].Position.x += 0.02f;
+				}
+				else
+				{
+					this->meshes[i].vertices[j].Position.x -= 0.02f;
+				}
+
+				//this->meshes[i].vertices[j].Position.x -= 0.02f;
+				//this->meshes[i].vertices[j].Position.y -= 0.02f;
+				//this->meshes[i].vertices[j].Position.z -= 0.02f;
 			}
 			this->meshes[i].setupMesh();
 		}
@@ -73,6 +89,16 @@ public:
 				this->meshes[i].vertices[j].Velocity.y += ((alpha / timeStep) * displacement) + constrainingForce;
 				//Update position
 				this->meshes[i].vertices[j].Position.y += timeStep * this->meshes[i].vertices[j].Velocity.y;
+
+				displacement = goalPos.x - this->meshes[i].vertices[j].Position.x;
+				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.x;
+
+
+				// Update velocity
+				this->meshes[i].vertices[j].Velocity.x += ((alpha / timeStep) * displacement) + constrainingForce;
+				//Update position
+				this->meshes[i].vertices[j].Position.x += timeStep * this->meshes[i].vertices[j].Velocity.x;
+
 			}
 			this->meshes[i].setupMesh();
 		}
@@ -141,10 +167,13 @@ private:
 			vector.z = mesh->mVertices[i].z;
 			vertex.Position = vector;
 			// Normals
-			vector.x = mesh->mNormals[i].x;
-			vector.y = mesh->mNormals[i].y;
-			vector.z = mesh->mNormals[i].z;
-			vertex.Normal = vector;
+			if (mesh->mNormals)
+			{
+				vector.x = mesh->mNormals[i].x;
+				vector.y = mesh->mNormals[i].y;
+				vector.z = mesh->mNormals[i].z;
+				vertex.Normal = vector;
+			}
 			// Texture Coordinates
 			if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
 			{
