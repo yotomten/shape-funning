@@ -44,26 +44,17 @@ public:
 			for (GLuint j = 0; j < meshes[i].vertices.size(); j++)
 			{
 				if (this->meshes[i].vertices[j].Position.y < 0)
-				{
 					this->meshes[i].vertices[j].Position.y += 0.02f;
-				}
 				else
-				{
 					this->meshes[i].vertices[j].Position.y -= 0.02f;
-				}
-
 				if (this->meshes[i].vertices[j].Position.x < 0)
-				{
 					this->meshes[i].vertices[j].Position.x += 0.02f;
-				}
 				else
-				{
 					this->meshes[i].vertices[j].Position.x -= 0.02f;
-				}
-
-				//this->meshes[i].vertices[j].Position.x -= 0.02f;
-				//this->meshes[i].vertices[j].Position.y -= 0.02f;
-				//this->meshes[i].vertices[j].Position.z -= 0.02f;
+				if (this->meshes[i].vertices[j].Position.z < 0)
+					this->meshes[i].vertices[j].Position.z += 0.02f;
+				else
+					this->meshes[i].vertices[j].Position.z -= 0.02f;
 			}
 			this->meshes[i].setupMesh();
 		}
@@ -83,8 +74,6 @@ public:
 				goalPos = referenceModel.meshes[i].vertices[j].Position;
 				displacement = goalPos.y - this->meshes[i].vertices[j].Position.y;
 				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.y;
-
-
 				// Update velocity
 				this->meshes[i].vertices[j].Velocity.y += ((alpha / timeStep) * displacement) + constrainingForce;
 				//Update position
@@ -92,16 +81,47 @@ public:
 
 				displacement = goalPos.x - this->meshes[i].vertices[j].Position.x;
 				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.x;
-
-
 				// Update velocity
 				this->meshes[i].vertices[j].Velocity.x += ((alpha / timeStep) * displacement) + constrainingForce;
 				//Update position
 				this->meshes[i].vertices[j].Position.x += timeStep * this->meshes[i].vertices[j].Velocity.x;
 
+				displacement = goalPos.z - this->meshes[i].vertices[j].Position.z;
+				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.z;
+				// Update velocity
+				this->meshes[i].vertices[j].Velocity.z += ((alpha / timeStep) * displacement) + constrainingForce;
+				//Update position
+				this->meshes[i].vertices[j].Position.z += timeStep * this->meshes[i].vertices[j].Velocity.z;
 			}
 			this->meshes[i].setupMesh();
 		}
+	}
+
+	glm::vec3 GetCentroid()
+	{
+		glm::vec3 centroid;
+		GLfloat nrOfVertices = 0.0f;
+
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			for (GLuint j = 0; j < this->meshes[i].vertices.size(); j++)
+			{
+				centroid.x += this->meshes[i].vertices[j].Position.x;
+				centroid.y += this->meshes[i].vertices[j].Position.y;
+				centroid.z += this->meshes[i].vertices[j].Position.z;
+			}
+			nrOfVertices += this->meshes[i].vertices.size();
+		}
+
+		centroid.x /= nrOfVertices;
+		centroid.y /= nrOfVertices;
+		centroid.z /= nrOfVertices;
+
+		cout << "Centroid.x : " << centroid.x << endl;
+		cout << "Centroid.y : " << centroid.y << endl;
+		cout << "Centroid.z : " << centroid.z << endl;
+
+		return centroid;
 	}
 
 private:

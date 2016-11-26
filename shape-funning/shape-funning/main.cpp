@@ -295,34 +295,32 @@ void HandleDeformation(Model &ourModel, GLfloat time)
 		restore = true;
 	if (keys[GLFW_KEY_Y])
 	{
-		dampingConstant += 0.001;
+		dampingConstant += 0.001f;
 		cout << "dampingConstant: " << dampingConstant << endl;
 	}
 	if (keys[GLFW_KEY_H])
 	{
-		if (dampingConstant > 0.001)
-		{
-			dampingConstant -= 0.001;
-		}
+		if (dampingConstant > 0.001f)
+			dampingConstant -= 0.001f;
 
 		cout << "dampingConstant: " << dampingConstant << endl;
 	}
 	if (keys[GLFW_KEY_U])
 	{
-		if (alpha < 1.0)
-		{
-			alpha += 0.01;
-		}
+		if (alpha < 1.0f)
+			alpha += 0.01f;
 		cout << "alpha: " << alpha << endl;
 	}
 	if (keys[GLFW_KEY_J])
 	{
-		if (alpha > 0.01)
-		{
-			alpha -= 0.01;
-		}
-
+		if (alpha > 0.01f)
+			alpha -= 0.01f;
 		cout << "alpha: " << alpha << endl;
+	}
+
+	if (keys[GLFW_KEY_C])
+	{
+		ourModel.GetCentroid();
 	}
 }
 
@@ -337,7 +335,9 @@ int main()
 
 	Shader modelShader("./Shaders/model_loading.vert", "./Shaders/model_loading.frag");
 
-	Model ourModel("./Models/Crate/Crate1.obj");
+	cout << "Loading model..." << endl;
+	Model ourModel("./Models/Crate/crate1.obj");
+	cout << "Loaded model. " << endl;
 	Model referenceModel = ourModel;
 
 	// Init transformations
@@ -355,7 +355,7 @@ int main()
 
 		glfwPollEvents(); // Check if events have been activated
 		DoMovement();
-		delta += 0.01;
+		delta += 0.01f;
 		// Rendering commands
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
