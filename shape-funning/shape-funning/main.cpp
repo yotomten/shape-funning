@@ -23,6 +23,9 @@
 #include "Classes/Camera.h"
 #include "Classes/Model.h"
 
+
+// GLOBALS..............................................................
+
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 
@@ -43,6 +46,10 @@ bool firstMouse = true;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
+
+GLfloat dampingConstant = 0.5f;
+GLfloat alpha = 0.5f;
+bool restore = false;
 
 bool InitGlfwAndGlew(GLFWwindow* &window)
 {
@@ -124,10 +131,10 @@ void InitGeometryTransformations(glm::mat4 &model, GLuint &modelLoc,
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
-void UpdateTransformations(glm::mat4 &model, GLuint &modelLoc,
+void UpdateUniforms(glm::mat4 &model, GLuint &modelLoc,
 						   glm::mat4 &view, GLuint &viewLoc,
 						   glm::mat4 &proj, GLuint &projLoc,
-						   Shader &shader)
+						   Shader &shader, GLfloat deltaTime, GLuint &timeLoc)
 {
 	// Create camera transformation
 	view = camera.GetViewMatrix();
@@ -145,6 +152,9 @@ void UpdateTransformations(glm::mat4 &model, GLuint &modelLoc,
 
 	projLoc = glGetUniformLocation(shader.Program, "proj");
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
+	timeLoc = glGetUniformLocation(shader.Program, "deltaTime");
+	glUniform1f(timeLoc, deltaTime);
 
 }
 
@@ -274,8 +284,7 @@ void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 	camera.ProcessMouseScroll((GLfloat)yOffset);
 }
 
-bool restore = false;
-void HandleDeformation(Model &ourModel, Model &referenceModel, GLfloat time)
+void HandleDeformation(Model &ourModel, GLfloat time)
 {
 	if (keys[GLFW_KEY_R])
 	{
@@ -284,6 +293,37 @@ void HandleDeformation(Model &ourModel, Model &referenceModel, GLfloat time)
 	}
 	if (keys[GLFW_KEY_T])
 		restore = true;
+	if (keys[GLFW_KEY_Y])
+	{
+		dampingConstant += 0.001;
+		cout << "dampingConstant: " << dampingConstant << endl;
+	}
+	if (keys[GLFW_KEY_H])
+	{
+		if (dampingConstant > 0.001)
+		{
+			dampingConstant -= 0.001;
+		}
+
+		cout << "dampingConstant: " << dampingConstant << endl;
+	}
+	if (keys[GLFW_KEY_U])
+	{
+		if (alpha < 1.0)
+		{
+			alpha += 0.01;
+		}
+		cout << "alpha: " << alpha << endl;
+	}
+	if (keys[GLFW_KEY_J])
+	{
+		if (alpha > 0.01)
+		{
+			alpha -= 0.01;
+		}
+
+		cout << "alpha: " << alpha << endl;
+	}
 }
 
 int main()
@@ -302,7 +342,8 @@ int main()
 
 	// Init transformations
 	glm::mat4 model, view, proj;
-	GLuint modelLoc, viewLoc, projLoc;
+	GLuint modelLoc, viewLoc, projLoc, timeLoc;
+	GLfloat delta = 0;
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -314,21 +355,20 @@ int main()
 
 		glfwPollEvents(); // Check if events have been activated
 		DoMovement();
-
+		delta += 0.01;
 		// Rendering commands
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		HandleDeformation(ourModel, referenceModel, deltaTime);
+		UpdateUniforms(model, modelLoc, view, viewLoc,
+			proj, projLoc, modelShader, delta, timeLoc);
+
+		HandleDeformation(ourModel, deltaTime);
+
 		if (restore)
 		{
-			ourModel.RestoreDeformedModel(referenceModel, deltaTime);
+			ourModel.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, alpha);
 		}
-
-		UpdateTransformations(model, modelLoc,
-			view, viewLoc,
-			proj, projLoc,
-			modelShader);
 
 		ourModel.Draw(modelShader);
 

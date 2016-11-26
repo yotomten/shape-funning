@@ -43,36 +43,36 @@ public:
 		{
 			for (GLuint j = 0; j < meshes[i].vertices.size(); j++)
 			{
-				if (this->meshes[i].vertices[j].Position.y > 10.0f)
+				if (this->meshes[i].vertices[j].Position.y > 12.0f)
 				{
-					this->meshes[i].vertices[j].Position.y -= 1.0f;
+					this->meshes[i].vertices[j].Position.y -= 0.02f;
 				}
 					
 			}
-
 			this->meshes[i].setupMesh();
 		}
 	}
 
-	void RestoreDeformedModel(Model &referenceModel, double time)
+	void RestoreDeformedModel(Model &referenceModel, double time, GLfloat k, GLfloat alpha)
 	{
-		double alpha = 0.2;
-		double velScale = alpha / time;
-		GLfloat velSc = (GLfloat)velScale;
 		glm::vec3 goalPos;
+		GLfloat timeStep = (GLfloat)time;
+		GLfloat constrainingForce;
+		GLfloat displacement;
 
 		for (GLuint i = 0; i < this->meshes.size(); i++)
 		{
-			for (GLuint j = 0; j < meshes[i].vertices.size(); j++)
+			for (GLuint j = 0; j < this->meshes[i].vertices.size(); j++)
 			{
 				goalPos = referenceModel.meshes[i].vertices[j].Position;
+				displacement = goalPos.y - this->meshes[i].vertices[j].Position.y;
+				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.y;
+
 
 				// Update velocity
-				this->meshes[i].vertices[j].Velocity.y += velSc * (goalPos.y - this->meshes[i].vertices[j].Position.y);
-				GLfloat velocity = this->meshes[i].vertices[j].Velocity.y;
-
+				this->meshes[i].vertices[j].Velocity.y += ((alpha / timeStep) * displacement) + constrainingForce;
 				//Update position
-				this->meshes[i].vertices[j].Position.y += (GLfloat)time * velocity;
+				this->meshes[i].vertices[j].Position.y += timeStep * this->meshes[i].vertices[j].Velocity.y;
 			}
 			this->meshes[i].setupMesh();
 		}
