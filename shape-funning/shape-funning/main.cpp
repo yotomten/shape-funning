@@ -139,7 +139,6 @@ void UpdateUniforms(glm::mat4 &model, GLuint &modelLoc,
 	// Create camera transformation
 	view = camera.GetViewMatrix();
 	proj = glm::perspective(camera.Zoom, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	shader.Use();
 	// Get the uniform locations and pass the matrices to the shader
@@ -284,7 +283,7 @@ void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 	camera.ProcessMouseScroll((GLfloat)yOffset);
 }
 
-void HandleDeformation(Model &ourModel, GLfloat time)
+void HandleDeformation(Model &ourModel, GLfloat time, glm::mat4 &model)
 {
 	if (keys[GLFW_KEY_R])
 	{
@@ -317,10 +316,14 @@ void HandleDeformation(Model &ourModel, GLfloat time)
 			alpha -= 0.01f;
 		cout << "alpha: " << alpha << endl;
 	}
-
 	if (keys[GLFW_KEY_C])
 	{
 		ourModel.GetCentroid();
+	}
+	if (keys[GLFW_KEY_Q])
+	{
+		//model = glm::translate(model, glm::vec3(1.0, 0.0, 0.0));
+		model = glm::rotate(model, 5.0f, glm::vec3(0.0, 0.5, 1.0));
 	}
 }
 
@@ -360,10 +363,10 @@ int main()
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		HandleDeformation(ourModel, deltaTime, model);
+
 		UpdateUniforms(model, modelLoc, view, viewLoc,
 			proj, projLoc, modelShader, delta, timeLoc);
-
-		HandleDeformation(ourModel, deltaTime);
 
 		if (restore)
 		{

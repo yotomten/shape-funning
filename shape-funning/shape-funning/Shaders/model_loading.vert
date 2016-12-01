@@ -12,9 +12,6 @@ uniform float deltaTime;
 
 void main()
 {
-	vec3 pos = position;
-	pos.x = (1 + sin(deltaTime)) * pos.x;
-	pos.y = (1 + cos(deltaTime)) * pos.y;
     gl_Position = proj * view * model * vec4(position, 1.0f);
     TexCoords = texCoords;
 }
