@@ -347,6 +347,12 @@ int main()
 	glm::mat4 model, view, proj;
 	GLuint modelLoc, viewLoc, projLoc, timeLoc;
 	GLfloat delta = 0;
+	
+
+	vector<glm::vec3> q;
+	q
+	q = referenceModel.Findq(&referenceModel);
+	glm::mat3 Aqq = ourModel.FindAqq(q);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))

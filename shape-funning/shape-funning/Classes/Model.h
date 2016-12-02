@@ -63,6 +63,11 @@ public:
 		}
 	}
 
+	glm::vec3 Findg()
+	{
+
+	}
+
 	void RestoreDeformedModel(Model &referenceModel, double time, GLfloat k, GLfloat alpha)
 	{
 		glm::vec3 goalPos;
@@ -190,7 +195,7 @@ public:
 		return q;
 	}
 
-	glm::mat3 FindAqq(glm::vec3 *q)
+	glm::mat3 FindAqq(vector<glm::vec3> q)
 	{
 		glm::mat3 Aqq;
 
@@ -205,7 +210,7 @@ public:
 		return Aqq;
 	}
 
-	glm::mat3 FindApq(glm::vec3 *q)
+	glm::mat3 FindApq(vector<GLfloat> q)
 	{
 		glm::mat3 Apq;
 		glm::vec3 p;
