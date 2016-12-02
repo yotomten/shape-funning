@@ -100,7 +100,7 @@ public:
 		}
 	}
 
-	glm::vec3 GetCentroid()
+	glm::vec3 CalculateCentroid()
 	{
 		glm::vec3 centroid;
 		GLfloat nrOfVertices = 0.0f;
@@ -123,11 +123,10 @@ public:
 		cout << "Centroid.x : " << centroid.x << endl;
 		cout << "Centroid.y : " << centroid.y << endl;
 		cout << "Centroid.z : " << centroid.z << endl;
-
 		return centroid;
 	}
 
-	glm::vec3 GetCentroid(Model *referenceModel)
+	glm::vec3 CalculateCentroid(Model *referenceModel)
 	{
 		glm::vec3 centroid;
 		GLfloat nrOfVertices = 0.0f;
@@ -154,9 +153,19 @@ public:
 		return centroid;
 	}
 
+	glm::vec3 GetCentroid()
+	{
+		return this->centroid;
+	}
+
+	void SetCentroid(glm::vec3 centroid)
+	{
+		this->centroid = centroid;
+	}
+
 	int GetNrOfVertices(Model *referenceModel)
 	{
-		GLfloat nrOfVertices = 0.0f;
+		int nrOfVertices;
 
 		for (GLuint i = 0; i < referenceModel->meshes.size(); i++)
 		{
@@ -168,7 +177,7 @@ public:
 	std::vector<glm::vec3> Findq(Model *referenceModel)
 	{
 		std::vector<glm::vec3> q;
-		glm::vec3 centroid = GetCentroid();
+		glm::vec3 centroid = CalculateCentroid();
 
 		for (GLuint i = 0; i < referenceModel->meshes.size(); i++)
 		{
@@ -200,7 +209,7 @@ public:
 	{
 		glm::mat3 Apq;
 		glm::vec3 p;
-		glm::vec3 centroid = GetCentroid();
+		glm::vec3 centroid = CalculateCentroid();
 		glm::vec3 vertex;
 
 		for (GLuint i = 0; i < this->meshes.size(); i++)
@@ -219,9 +228,32 @@ public:
 	{
 		glm::mat3 S;
 		glm::mat3 R;
+		glm::mat3 SInverse;
+		glm::mat3 ApqTApq = glm::transpose(Apq) * Apq;
 
-		S = glm::sqrt(glm::transpose(Apq) * Apq);
-		R = Apq * glm::inverse(S);
+		//S = glm::sqrt(glm::transpose(Apq) * Apq);
+
+		double ApqVectorized[9] = { (double)ApqTApq[0][0], (double)ApqTApq[0][0], (double)ApqTApq[0][0],
+			(double)ApqTApq[0][0], (double)ApqTApq[0][0], (double)ApqTApq[0][0],
+			(double)ApqTApq[0][0], (double)ApqTApq[0][0], (double)ApqTApq[0][0] };
+
+		int maxNrOfIterations = 10;
+		int nrOfRotations;
+		double eigenVectors[9];
+		double eigenValues[3];
+
+		jacobi_eigenvalue(3, ApqVectorized, maxNrOfIterations,
+			eigenVectors, eigenValues, nrOfRotations, nrOfRotations);
+
+		S[0][0] = (GLfloat)eigenValues[0];
+		S[1][1] = (GLfloat)eigenValues[1];
+		S[2][2] = (GLfloat)eigenValues[2];
+
+		SInverse[0][0] = 1.0f / glm::sqrt(S[0][0]);
+		SInverse[1][1] = 1.0f / glm::sqrt(S[1][1]);
+		SInverse[2][2] = 1.0f / glm::sqrt(S[2][2]);
+
+		R = Apq * SInverse;
 		return R;
 	}
 
@@ -238,6 +270,8 @@ private:
 	vector<Mesh> meshes;
 	string directory;
 	vector<Texture> textures_loaded;	// Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+
+	glm::vec3 centroid;
 
 	/*  Functions   */
 	// Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
