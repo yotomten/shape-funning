@@ -18,6 +18,9 @@ using namespace std;
 
 #include "Mesh.h"
 
+#include <jacobi/jacobi_eigenvalue.hpp>
+#include <vector>
+
 GLint TextureFromFile(const char* path, string directory);
 
 class Model
@@ -74,23 +77,23 @@ public:
 				goalPos = referenceModel.meshes[i].vertices[j].Position;
 				displacement = goalPos.y - this->meshes[i].vertices[j].Position.y;
 				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.y;
-				// Update velocity
+				// Update velocity y
 				this->meshes[i].vertices[j].Velocity.y += ((alpha / timeStep) * displacement) + constrainingForce;
-				//Update position
+				//Update position y
 				this->meshes[i].vertices[j].Position.y += timeStep * this->meshes[i].vertices[j].Velocity.y;
 
 				displacement = goalPos.x - this->meshes[i].vertices[j].Position.x;
 				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.x;
-				// Update velocity
+				// Update velocity x
 				this->meshes[i].vertices[j].Velocity.x += ((alpha / timeStep) * displacement) + constrainingForce;
-				//Update position
+				//Update position x
 				this->meshes[i].vertices[j].Position.x += timeStep * this->meshes[i].vertices[j].Velocity.x;
 
 				displacement = goalPos.z - this->meshes[i].vertices[j].Position.z;
 				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.z;
-				// Update velocity
+				// Update velocity z
 				this->meshes[i].vertices[j].Velocity.z += ((alpha / timeStep) * displacement) + constrainingForce;
-				//Update position
+				//Update position z
 				this->meshes[i].vertices[j].Position.z += timeStep * this->meshes[i].vertices[j].Velocity.z;
 			}
 			this->meshes[i].setupMesh();
@@ -122,6 +125,112 @@ public:
 		cout << "Centroid.z : " << centroid.z << endl;
 
 		return centroid;
+	}
+
+	glm::vec3 GetCentroid(Model *referenceModel)
+	{
+		glm::vec3 centroid;
+		GLfloat nrOfVertices = 0.0f;
+
+		for (GLuint i = 0; i < referenceModel->meshes.size(); i++)
+		{
+			for (GLuint j = 0; j < referenceModel->meshes[i].vertices.size(); j++)
+			{
+				centroid.x += referenceModel->meshes[i].vertices[j].Position.x;
+				centroid.y += referenceModel->meshes[i].vertices[j].Position.y;
+				centroid.z += referenceModel->meshes[i].vertices[j].Position.z;
+			}
+			nrOfVertices += referenceModel->meshes[i].vertices.size();
+		}
+
+		centroid.x /= nrOfVertices;
+		centroid.y /= nrOfVertices;
+		centroid.z /= nrOfVertices;
+
+		cout << "Centroid.x : " << centroid.x << endl;
+		cout << "Centroid.y : " << centroid.y << endl;
+		cout << "Centroid.z : " << centroid.z << endl;
+
+		return centroid;
+	}
+
+	int GetNrOfVertices(Model *referenceModel)
+	{
+		GLfloat nrOfVertices = 0.0f;
+
+		for (GLuint i = 0; i < referenceModel->meshes.size(); i++)
+		{
+			nrOfVertices += referenceModel->meshes[i].vertices.size();
+		}
+		return nrOfVertices;
+	}
+
+	std::vector<glm::vec3> Findq(Model *referenceModel)
+	{
+		std::vector<glm::vec3> q;
+		glm::vec3 centroid = GetCentroid();
+
+		for (GLuint i = 0; i < referenceModel->meshes.size(); i++)
+		{
+			for (GLuint j = 0; j < referenceModel->meshes[i].vertices.size(); j++)
+			{
+				q[j] = referenceModel->meshes[i].vertices[j].Position - centroid; // q transpose implied in second case
+			}
+		}
+
+		return q;
+	}
+
+	glm::mat3 FindAqq(glm::vec3 *q)
+	{
+		glm::mat3 Aqq;
+
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			for (GLuint j = 0; j < this->meshes[i].vertices.size(); j++)
+			{
+				Aqq += q[j] * q[j]; // q transpose implied in second case
+			}
+		}
+		Aqq = glm::inverse(Aqq);
+		return Aqq;
+	}
+
+	glm::mat3 FindApq(glm::vec3 *q)
+	{
+		glm::mat3 Apq;
+		glm::vec3 p;
+		glm::vec3 centroid = GetCentroid();
+		glm::vec3 vertex;
+
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			for (GLuint j = 0; j < this->meshes[i].vertices.size(); j++)
+			{
+				vertex = this->meshes[i].vertices[j].Position;
+				p = vertex - centroid;
+				Apq += p * q[j]; // q transpose implied
+			}
+		}
+		return Apq;
+	}
+
+	glm::mat3 FindR(glm::mat3 Apq)
+	{
+		glm::mat3 S;
+		glm::mat3 R;
+
+		S = glm::sqrt(glm::transpose(Apq) * Apq);
+		R = Apq * glm::inverse(S);
+		return R;
+	}
+
+	glm::mat3 FindA(glm::mat3 Apq, glm::mat3 Aqq)
+	{
+		glm::mat3 A;
+		A = Apq * Aqq;
+		A /= glm::pow(glm::determinant(A), 1.0f / 3.0f);
+		return A;
 	}
 
 private:
