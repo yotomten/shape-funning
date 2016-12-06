@@ -17,8 +17,6 @@ using namespace std;
 #include <assimp/postprocess.h>
 
 #include "Mesh.h"
-
-#include <jacobi/jacobi_eigenvalue.hpp>
 #include <vector>
 
 GLint TextureFromFile(const char* path, string directory);
@@ -68,20 +66,32 @@ public:
 
 	}
 
-	void RestoreDeformedModel(Model &referenceModel, double time, GLfloat k, GLfloat alpha)
+	void RestoreDeformedModel(Model &referenceModel, double time, GLfloat k,
+		GLfloat alpha, glm::mat3 Aqq, vector<glm::vec3> q)
 	{
 		glm::vec3 goalPos;
 		GLfloat timeStep = (GLfloat)time;
 		GLfloat constrainingForce;
 		GLfloat displacement;
+		glm::vec3 centroid = CalculateCentroid();
+		GLfloat beta = 0.8f;
+
+		glm::mat3 Apq = FindApq(q);
+		glm::mat3 R = FindR(Apq);
+		glm::mat3 A = FindA(Apq, Aqq);
+
+
 
 		for (GLuint i = 0; i < this->meshes.size(); i++)
 		{
 			for (GLuint j = 0; j < this->meshes[i].vertices.size(); j++)
 			{
-				goalPos = referenceModel.meshes[i].vertices[j].Position;
+				float hej = glm::determinant(R);
+				//goalPos = referenceModel.meshes[i].vertices[j].Position;
+				goalPos = (beta * A + (1 - beta) * R) * q[j] + centroid;
 				displacement = goalPos.y - this->meshes[i].vertices[j].Position.y;
 				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.y;
+
 				// Update velocity y
 				this->meshes[i].vertices[j].Velocity.y += ((alpha / timeStep) * displacement) + constrainingForce;
 				//Update position y
@@ -102,6 +112,7 @@ public:
 				this->meshes[i].vertices[j].Position.z += timeStep * this->meshes[i].vertices[j].Velocity.z;
 			}
 			this->meshes[i].setupMesh();
+
 		}
 	}
 
@@ -125,9 +136,9 @@ public:
 		centroid.y /= nrOfVertices;
 		centroid.z /= nrOfVertices;
 
-		cout << "Centroid.x : " << centroid.x << endl;
-		cout << "Centroid.y : " << centroid.y << endl;
-		cout << "Centroid.z : " << centroid.z << endl;
+		//cout << "Centroid.x : " << centroid.x << endl;
+		//cout << "Centroid.y : " << centroid.y << endl;
+		//cout << "Centroid.z : " << centroid.z << endl;
 		return centroid;
 	}
 
@@ -188,7 +199,7 @@ public:
 		{
 			for (GLuint j = 0; j < referenceModel->meshes[i].vertices.size(); j++)
 			{
-				q[j] = referenceModel->meshes[i].vertices[j].Position - centroid; // q transpose implied in second case
+				q.push_back(referenceModel->meshes[i].vertices[j].Position - centroid); // q transpose implied in second case
 			}
 		}
 
@@ -210,7 +221,7 @@ public:
 		return Aqq;
 	}
 
-	glm::mat3 FindApq(vector<GLfloat> q)
+	glm::mat3 FindApq(vector<glm::vec3> q)
 	{
 		glm::mat3 Apq;
 		glm::vec3 p;
@@ -229,6 +240,26 @@ public:
 		return Apq;
 	}
 
+
+	// Perform Denman–Beavers iteration to find the square root.
+	glm::mat3 sqrtMat(glm::mat3 m)
+	{
+		glm::mat3 m1 = m;
+		glm::mat3 m2 = glm::mat3();
+		glm::mat3 half_mat;
+		half_mat = 0.5f * glm::mat3();
+
+		for (int i = 0; i < 100; ++i)
+		{
+			glm::mat3 inv1 = glm::inverse(m1);
+			glm::mat3 inv2 = glm::inverse(m2);
+			m1 = (m1 + inv2) * half_mat;
+			m2 = (m2 + inv1) * half_mat;
+		}
+
+		return m1;
+	}
+
 	glm::mat3 FindR(glm::mat3 Apq)
 	{
 		glm::mat3 S;
@@ -238,17 +269,19 @@ public:
 
 		//S = glm::sqrt(glm::transpose(Apq) * Apq);
 
-		double ApqVectorized[9] = { (double)ApqTApq[0][0], (double)ApqTApq[0][0], (double)ApqTApq[0][0],
-			(double)ApqTApq[0][0], (double)ApqTApq[0][0], (double)ApqTApq[0][0],
-			(double)ApqTApq[0][0], (double)ApqTApq[0][0], (double)ApqTApq[0][0] };
+		/*double ApqVectorized[9] = { (double)ApqTApq[0][0], (double)ApqTApq[1][0], (double)ApqTApq[2][0],
+			(double)ApqTApq[0][1], (double)ApqTApq[1][1], (double)ApqTApq[2][1],
+			(double)ApqTApq[0][2], (double)ApqTApq[1][2], (double)ApqTApq[2][2] };
 
 		int maxNrOfIterations = 10;
 		int nrOfRotations;
+		int nrOfIterations;
 		double eigenVectors[9];
 		double eigenValues[3];
 
 		jacobi_eigenvalue(3, ApqVectorized, maxNrOfIterations,
-			eigenVectors, eigenValues, nrOfRotations, nrOfRotations);
+			eigenVectors, eigenValues, nrOfIterations, nrOfRotations);
+		
 
 		S[0][0] = (GLfloat)eigenValues[0];
 		S[1][1] = (GLfloat)eigenValues[1];
@@ -258,7 +291,12 @@ public:
 		SInverse[1][1] = 1.0f / glm::sqrt(S[1][1]);
 		SInverse[2][2] = 1.0f / glm::sqrt(S[2][2]);
 
-		R = Apq * SInverse;
+		R = Apq * SInverse;*/
+
+		S = sqrtMat(ApqTApq);
+
+		R = Apq * glm::inverse(S);
+
 		return R;
 	}
 
@@ -266,7 +304,7 @@ public:
 	{
 		glm::mat3 A;
 		A = Apq * Aqq;
-		A /= glm::pow(glm::determinant(A), 1.0f / 3.0f);
+		A /= glm::pow(glm::determinant(A), 1.0f / 3.0f); // Preserve volume
 		return A;
 	}
 

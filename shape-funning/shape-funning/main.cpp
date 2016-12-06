@@ -350,9 +350,10 @@ int main()
 	
 
 	vector<glm::vec3> q;
-	q
+	
+	// Pre-calculated deformation parameters
 	q = referenceModel.Findq(&referenceModel);
-	glm::mat3 Aqq = ourModel.FindAqq(q);
+	glm::mat3 Aqq = referenceModel.FindAqq(q);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -376,7 +377,7 @@ int main()
 
 		if (restore)
 		{
-			ourModel.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, alpha);
+			ourModel.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, alpha, Aqq, q);
 		}
 
 		ourModel.Draw(modelShader);
