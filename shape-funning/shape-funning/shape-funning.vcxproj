@@ -117,6 +117,7 @@
     <Image Include="Images\face.png" />
     <Image Include="Images\medallion.jpg" />
     <Image Include="Images\stone.jpg" />
+    <Image Include="Models\Crate\crate2.jpg" />
     <Image Include="Models\Crate\crate_1.jpg" />
     <Image Include="Models\darksiders\body.png" />
     <Image Include="Models\darksiders\Body_alpha.png" />

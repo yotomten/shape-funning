@@ -276,6 +276,9 @@
     <Image Include="Models\Crate\crate_1.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Models\Crate\crate2.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Models\nanosuit\LICENSE.txt" />

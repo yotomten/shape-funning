@@ -318,7 +318,6 @@ void HandleDeformation(Model &ourModel, GLfloat time, glm::mat4 &model)
 	}
 	if (keys[GLFW_KEY_Q])
 	{
-		//model = glm::translate(model, glm::vec3(1.0, 0.0, 0.0));
 		model = glm::rotate(model, 5.0f, glm::vec3(0.0, 0.5, 1.0));
 		ourModel.modelMatrix = model;
 	}
@@ -343,12 +342,14 @@ int main()
 
 
 	// Init transformations
-	glm::mat4 model, view, proj;
+	glm::mat4 model, containingModelMatrix, view, proj;
 	GLuint modelLoc, viewLoc, projLoc, timeLoc;
 	GLfloat delta = 0;
 	
 	ourModel.modelMatrix = model;
-	
+	containingModelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f));
+	containingModel.modelMatrix = containingModelMatrix;
+
 	// Pre-calculated deformation parameters
 	vector<glm::vec3> q;
 	q = referenceModel.Findq(&referenceModel);
@@ -379,6 +380,7 @@ int main()
 		}
 
 		ourModel.Draw(modelShader,ourModel.modelMatrix, modelLoc);
+		containingModel.Draw(modelShader, containingModel.modelMatrix, modelLoc);
 
 		glfwSwapBuffers(window);
 	}
