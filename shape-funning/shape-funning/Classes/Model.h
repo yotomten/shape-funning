@@ -24,6 +24,9 @@ GLint TextureFromFile(const char* path, string directory);
 class Model
 {
 public:
+	/*  Model Data  */
+	glm::mat4 modelMatrix;
+
 	/*  Functions   */
 	// Constructor, expects a filepath to a 3D model.
 	Model(GLchar* path)
@@ -32,10 +35,10 @@ public:
 	}
 
 	// Draws the model, and thus all its meshes
-	void Draw(Shader shader)
+	void Draw(Shader shader, glm::mat4 &model, GLuint &modelLoc)
 	{
 		for (GLuint i = 0; i < this->meshes.size(); i++)
-			this->meshes[i].Draw(shader);
+			this->meshes[i].Draw(shader, model, modelLoc);
 	}
 
 	void DeformModel()
@@ -59,11 +62,6 @@ public:
 			}
 			this->meshes[i].setupMesh();
 		}
-	}
-
-	glm::vec3 Findg()
-	{
-
 	}
 
 	void RestoreDeformedModel(Model &referenceModel, double time, GLfloat k,
@@ -136,13 +134,10 @@ public:
 		centroid.y /= nrOfVertices;
 		centroid.z /= nrOfVertices;
 
-		//cout << "Centroid.x : " << centroid.x << endl;
-		//cout << "Centroid.y : " << centroid.y << endl;
-		//cout << "Centroid.z : " << centroid.z << endl;
 		return centroid;
 	}
 
-	glm::vec3 CalculateCentroid(Model *referenceModel)
+	glm::vec3 CalculateRefCentroid(Model *referenceModel)
 	{
 		glm::vec3 centroid;
 		GLfloat nrOfVertices = 0.0f;
@@ -179,7 +174,7 @@ public:
 		this->centroid = centroid;
 	}
 
-	int GetNrOfVertices(Model *referenceModel)
+	int GetNrOfRefVertices(Model *referenceModel)
 	{
 		int nrOfVertices;
 
@@ -266,32 +261,6 @@ public:
 		glm::mat3 R;
 		glm::mat3 SInverse;
 		glm::mat3 ApqTApq = glm::transpose(Apq) * Apq;
-
-		//S = glm::sqrt(glm::transpose(Apq) * Apq);
-
-		/*double ApqVectorized[9] = { (double)ApqTApq[0][0], (double)ApqTApq[1][0], (double)ApqTApq[2][0],
-			(double)ApqTApq[0][1], (double)ApqTApq[1][1], (double)ApqTApq[2][1],
-			(double)ApqTApq[0][2], (double)ApqTApq[1][2], (double)ApqTApq[2][2] };
-
-		int maxNrOfIterations = 10;
-		int nrOfRotations;
-		int nrOfIterations;
-		double eigenVectors[9];
-		double eigenValues[3];
-
-		jacobi_eigenvalue(3, ApqVectorized, maxNrOfIterations,
-			eigenVectors, eigenValues, nrOfIterations, nrOfRotations);
-		
-
-		S[0][0] = (GLfloat)eigenValues[0];
-		S[1][1] = (GLfloat)eigenValues[1];
-		S[2][2] = (GLfloat)eigenValues[2];
-
-		SInverse[0][0] = 1.0f / glm::sqrt(S[0][0]);
-		SInverse[1][1] = 1.0f / glm::sqrt(S[1][1]);
-		SInverse[2][2] = 1.0f / glm::sqrt(S[2][2]);
-
-		R = Apq * SInverse;*/
 
 		S = sqrtMat(ApqTApq);
 

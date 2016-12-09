@@ -53,7 +53,7 @@ public:
 	}
 
 	// Render the mesh
-	void Draw(Shader shader)
+	void Draw(Shader shader, glm::mat4 &model, GLuint &modelLoc)
 	{
 		// Bind appropriate textures
 		GLuint diffuseNr = 1;
@@ -76,6 +76,9 @@ public:
 			glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
 		}
 
+		modelLoc = glGetUniformLocation(shader.Program, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // GL_FALSE means not transpose
+
 		// Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
 		glUniform1f(glGetUniformLocation(shader.Program, "material.shininess"), 16.0f);
 
@@ -92,11 +95,6 @@ public:
 		}
 	}
 
-//private:
-	/*  Render data  */
-	GLuint VAO, VBO, EBO;
-
-	/*  Functions    */
 	// Initializes all the buffer objects/arrays
 	void setupMesh()
 	{
@@ -129,6 +127,11 @@ public:
 
 		glBindVertexArray(0);
 	}
+private:
+	/*  Render data  */
+	GLuint VAO, VBO, EBO;
+
+	/*  Functions    */
 };
 
 

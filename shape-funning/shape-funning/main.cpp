@@ -131,10 +131,9 @@ void InitGeometryTransformations(glm::mat4 &model, GLuint &modelLoc,
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
-void UpdateUniforms(glm::mat4 &model, GLuint &modelLoc,
-						   glm::mat4 &view, GLuint &viewLoc,
-						   glm::mat4 &proj, GLuint &projLoc,
-						   Shader &shader, GLfloat deltaTime, GLuint &timeLoc)
+void UpdateUniforms(glm::mat4 &view, GLuint &viewLoc,
+					glm::mat4 &proj, GLuint &projLoc,
+					Shader &shader, GLfloat deltaTime, GLuint &timeLoc)
 {
 	// Create camera transformation
 	view = camera.GetViewMatrix();
@@ -142,9 +141,6 @@ void UpdateUniforms(glm::mat4 &model, GLuint &modelLoc,
 
 	shader.Use();
 	// Get the uniform locations and pass the matrices to the shader
-
-	modelLoc = glGetUniformLocation(shader.Program, "model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // GL_FALSE means not transpose
 
 	viewLoc = glGetUniformLocation(shader.Program, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
@@ -324,6 +320,7 @@ void HandleDeformation(Model &ourModel, GLfloat time, glm::mat4 &model)
 	{
 		//model = glm::translate(model, glm::vec3(1.0, 0.0, 0.0));
 		model = glm::rotate(model, 5.0f, glm::vec3(0.0, 0.5, 1.0));
+		ourModel.modelMatrix = model;
 	}
 }
 
@@ -342,16 +339,18 @@ int main()
 	Model ourModel("./Models/Crate/crate1.obj");
 	cout << "Loaded model. " << endl;
 	Model referenceModel = ourModel;
+	Model containingModel = ourModel;
+
 
 	// Init transformations
 	glm::mat4 model, view, proj;
 	GLuint modelLoc, viewLoc, projLoc, timeLoc;
 	GLfloat delta = 0;
 	
-
-	vector<glm::vec3> q;
+	ourModel.modelMatrix = model;
 	
 	// Pre-calculated deformation parameters
+	vector<glm::vec3> q;
 	q = referenceModel.Findq(&referenceModel);
 	glm::mat3 Aqq = referenceModel.FindAqq(q);
 
@@ -372,15 +371,14 @@ int main()
 
 		HandleDeformation(ourModel, deltaTime, model);
 
-		UpdateUniforms(model, modelLoc, view, viewLoc,
-			proj, projLoc, modelShader, delta, timeLoc);
+		UpdateUniforms(view, viewLoc, proj, projLoc, modelShader, delta, timeLoc);
 
 		if (restore)
 		{
 			ourModel.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, alpha, Aqq, q);
 		}
 
-		ourModel.Draw(modelShader);
+		ourModel.Draw(modelShader,ourModel.modelMatrix, modelLoc);
 
 		glfwSwapBuffers(window);
 	}
