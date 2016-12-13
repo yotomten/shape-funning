@@ -18,11 +18,11 @@
 // SOIL
 #include <soil/SOIL.h>
 
-// GL includes
+// Other includes
 #include "Classes/Shader.h"
 #include "Classes/Camera.h"
 #include "Classes/Model.h"
-
+#include "Classes/CollisionHandler.h"
 
 // GLOBALS..............................................................
 
@@ -47,9 +47,17 @@ bool firstMouse = true;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
+// Deformation
 GLfloat dampingConstant = 0.15f;
 GLfloat alpha = 0.15f;
 bool restore = false;
+
+// Integration
+
+GLfloat g = 9.82f;
+glm::vec3 acceleration;
+glm::vec3 speed;
+glm::vec3 positionChange;
 
 bool InitGlfwAndGlew(GLFWwindow* &window)
 {
@@ -362,6 +370,14 @@ int main()
 		GLfloat currentFrame = (GLfloat)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+
+		// Integration
+
+		acceleration += glm::vec3(0.0f, -g, 0.0f);
+		speed += acceleration * deltaTime * 0.1f;
+		positionChange = speed * deltaTime * 0.1f;
+		model = glm::translate(model, positionChange);
+		ourModel.modelMatrix = model;
 
 		glfwPollEvents(); // Check if events have been activated
 		DoMovement();

@@ -26,6 +26,7 @@ class Model
 public:
 	/*  Model Data  */
 	glm::mat4 modelMatrix;
+	vector<Mesh> meshes;
 
 	/*  Functions   */
 	// Constructor, expects a filepath to a 3D model.
@@ -279,7 +280,6 @@ public:
 
 private:
 	/*  Model Data  */
-	vector<Mesh> meshes;
 	string directory;
 	vector<Texture> textures_loaded;	// Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
@@ -291,7 +291,7 @@ private:
 	{
 		// Read file via ASSIMP
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 		// Check for errors
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 		{
@@ -342,13 +342,12 @@ private:
 			vector.z = mesh->mVertices[i].z;
 			vertex.Position = vector;
 			// Normals
-			if (mesh->mNormals)
-			{
+			
 				vector.x = mesh->mNormals[i].x;
 				vector.y = mesh->mNormals[i].y;
 				vector.z = mesh->mNormals[i].z;
 				vertex.Normal = vector;
-			}
+			
 			// Texture Coordinates
 			if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
 			{
