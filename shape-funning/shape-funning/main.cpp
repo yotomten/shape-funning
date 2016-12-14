@@ -22,7 +22,7 @@
 #include "Classes/Shader.h"
 #include "Classes/Camera.h"
 #include "Classes/Model.h"
-#include "Classes/CollisionHandler.h"
+#include "Services/CollisionhandlingServices.cpp"
 
 // GLOBALS..............................................................
 
@@ -348,7 +348,6 @@ int main()
 	Model referenceModel = ourModel;
 	Model containingModel = ourModel;
 
-
 	// Init transformations
 	glm::mat4 model, containingModelMatrix, view, proj;
 	GLuint modelLoc, viewLoc, projLoc, timeLoc;
@@ -378,6 +377,11 @@ int main()
 		positionChange = speed * deltaTime * 0.1f;
 		model = glm::translate(model, positionChange);
 		ourModel.modelMatrix = model;
+
+		//bool collision = collisionHandlingServices::ModelsColliding(ourModel,
+			//model, containingModel, containingModelMatrix);
+
+		collisionHandlingServices::CollideWithFloor(ourModel, ourModel.modelMatrix);
 
 		glfwPollEvents(); // Check if events have been activated
 		DoMovement();

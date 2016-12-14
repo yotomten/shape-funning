@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\CollisionHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -38,7 +35,7 @@
     <ClInclude Include="Classes\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\CollisionHandler.h">
+    <ClInclude Include="Services\collisionHandlingServices.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

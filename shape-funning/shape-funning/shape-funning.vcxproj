@@ -68,14 +68,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Classes\CollisionHandler.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\Camera.h" />
     <ClInclude Include="Classes\Model.h" />
     <ClInclude Include="Classes\Mesh.h" />
-    <ClInclude Include="Classes\CollisionHandler.h" />
+    <ClInclude Include="Services\collisionHandlingServices.cpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Classes\Shader.h" />
   </ItemGroup>
