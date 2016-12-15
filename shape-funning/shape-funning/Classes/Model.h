@@ -52,14 +52,14 @@ public:
 					this->meshes[i].vertices[j].Position.y += 0.02f;
 				else
 					this->meshes[i].vertices[j].Position.y -= 0.02f;
-				if (this->meshes[i].vertices[j].Position.x < 0)
-					this->meshes[i].vertices[j].Position.x += 0.02f;
-				else
-					this->meshes[i].vertices[j].Position.x -= 0.02f;
-				if (this->meshes[i].vertices[j].Position.z < 0)
-					this->meshes[i].vertices[j].Position.z += 0.02f;
-				else
-					this->meshes[i].vertices[j].Position.z -= 0.02f;
+				//if (this->meshes[i].vertices[j].Position.x < 0)
+				//	this->meshes[i].vertices[j].Position.x += 0.02f;
+				//else
+				//	this->meshes[i].vertices[j].Position.x -= 0.02f;
+				//if (this->meshes[i].vertices[j].Position.z < 0)
+				//	this->meshes[i].vertices[j].Position.z += 0.02f;
+				//else
+				//	this->meshes[i].vertices[j].Position.z -= 0.02f;
 			}
 			this->meshes[i].setupMesh();
 		}
@@ -85,8 +85,6 @@ public:
 		{
 			for (GLuint j = 0; j < this->meshes[i].vertices.size(); j++)
 			{
-				float hej = glm::determinant(R);
-				//goalPos = referenceModel.meshes[i].vertices[j].Position;
 				goalPos = (beta * A + (1 - beta) * R) * q[j] + centroid;
 				displacement = goalPos.y - this->meshes[i].vertices[j].Position.y;
 				constrainingForce = -k*this->meshes[i].vertices[j].Velocity.y;

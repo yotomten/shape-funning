@@ -182,9 +182,10 @@ namespace collisionHandlingServices
 
 	//}
 
-	bool CollideWithFloor(Model model, glm::mat4 modelMatrix)
+	bool CollideWithFloor(Model &model, glm::mat4 modelMatrix, glm::vec3 &speed, glm::vec3 &acceleration)
 	{
 		glm::vec3 vertex;
+		bool hit = false;
 
 		for (GLuint i = 0; i < model.meshes.size(); i++)
 		{
@@ -196,14 +197,18 @@ namespace collisionHandlingServices
 
 				if (vertex.y <= -10.0f)
 				{
-
+					model.meshes[i].vertices[j].Velocity.y += 2.0f * glm::abs(glm::vec3(modelMatrix * glm::vec4(model.meshes[i].vertices[j].Position, 1.0f)).y - 10.0f);
+					
 					std::cout << "collision" << endl;
+					speed = glm::vec3(0.0f);
+					acceleration = glm::vec3(0.0f);
 
-					return true;
+					hit = true;
 				}
 			}
+			model.meshes[i].setupMesh();
 		}
 
-		return false;
+		return hit;
 	}
 }

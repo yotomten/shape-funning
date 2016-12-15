@@ -50,7 +50,7 @@ GLfloat lastFrame = 0.0f;
 // Deformation
 GLfloat dampingConstant = 0.15f;
 GLfloat alpha = 0.15f;
-bool restore = false;
+bool restore = true;
 
 // Integration
 
@@ -381,7 +381,7 @@ int main()
 		//bool collision = collisionHandlingServices::ModelsColliding(ourModel,
 			//model, containingModel, containingModelMatrix);
 
-		collisionHandlingServices::CollideWithFloor(ourModel, ourModel.modelMatrix);
+		collisionHandlingServices::CollideWithFloor(ourModel, ourModel.modelMatrix, speed, acceleration);
 
 		glfwPollEvents(); // Check if events have been activated
 		DoMovement();
