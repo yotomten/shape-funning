@@ -55,9 +55,6 @@ bool restore = true;
 // Integration
 
 GLfloat g = 9.82f;
-glm::vec3 acceleration;
-glm::vec3 speed;
-glm::vec3 positionChange;
 
 bool InitGlfwAndGlew(GLFWwindow* &window)
 {
@@ -345,17 +342,31 @@ int main()
 	cout << "Loading model..." << endl;
 	Model ourModel("./Models/Crate/crate1.obj");
 	cout << "Loaded model. " << endl;
+	cout << "Loading model..." << endl;
+	Model ourModel2("./Models/Crate/crate1.obj");
+	cout << "Loaded model. " << endl;
+	cout << "Loading model..." << endl;
+	Model ourModel3("./Models/Crate/crate1.obj");
+	cout << "Loaded model. " << endl;
 	Model referenceModel = ourModel;
 	Model containingModel = ourModel;
 
 	// Init transformations
-	glm::mat4 model, containingModelMatrix, view, proj;
+	glm::mat4 model, model2, model3, containingModelMatrix, view, proj;
 	GLuint modelLoc, viewLoc, projLoc, timeLoc;
 	GLfloat delta = 0;
-	
+	model2 = glm::translate(model2, glm::vec3(5.0f, 0.0f, -5.0f));
+	model3 = glm::translate(model3, glm::vec3(-5.0f, 0.0f, 5.0f));
+
 	ourModel.modelMatrix = model;
+	ourModel2.modelMatrix = model2;
+	ourModel3.modelMatrix = model3;
 	containingModelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f));
 	containingModel.modelMatrix = containingModelMatrix;
+
+	// Integration parameters
+	glm::vec3 acceleration, speed, positionChange, acceleration2, speed2, positionChange2, acceleration3, speed3, positionChange3;
+
 
 	// Pre-calculated deformation parameters
 	vector<glm::vec3> q;
@@ -375,13 +386,26 @@ int main()
 		acceleration += glm::vec3(0.0f, -g, 0.0f);
 		speed += acceleration * deltaTime * 0.1f;
 		positionChange = speed * deltaTime * 0.1f;
+		acceleration2 += glm::vec3(0.0f, -g, 0.0f);
+		speed2 += acceleration2 * deltaTime * 0.1f;
+		positionChange2 = speed2 * deltaTime * 0.1f;
+		acceleration3 += glm::vec3(0.0f, -g, 0.0f);
+		speed3 += acceleration3 * deltaTime * 0.1f;
+		positionChange3 = speed3 * deltaTime * 0.1f;
+
 		model = glm::translate(model, positionChange);
+		model2 = glm::translate(model2, positionChange2);
+		model3 = glm::translate(model3, positionChange3);
 		ourModel.modelMatrix = model;
+		ourModel2.modelMatrix = model2;
+		ourModel3.modelMatrix = model3;
 
 		//bool collision = collisionHandlingServices::ModelsColliding(ourModel,
 			//model, containingModel, containingModelMatrix);
 
 		collisionHandlingServices::CollideWithFloor(ourModel, ourModel.modelMatrix, speed, acceleration);
+		collisionHandlingServices::CollideWithFloor(ourModel2, ourModel2.modelMatrix, speed2, acceleration2);
+		collisionHandlingServices::CollideWithFloor(ourModel3, ourModel3.modelMatrix, speed3, acceleration3);
 
 		glfwPollEvents(); // Check if events have been activated
 		DoMovement();
@@ -397,10 +421,16 @@ int main()
 		if (restore)
 		{
 			ourModel.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, alpha, Aqq, q);
+			ourModel2.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, 0.5f, Aqq, q);
+			ourModel3.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, 0.7f, Aqq, q);
 		}
 
 		ourModel.Draw(modelShader,ourModel.modelMatrix, modelLoc);
 		containingModel.Draw(modelShader, containingModel.modelMatrix, modelLoc);
+		ourModel2.Draw(modelShader, ourModel2.modelMatrix, modelLoc);
+		ourModel3.Draw(modelShader, ourModel3.modelMatrix, modelLoc);
+
+
 
 		glfwSwapBuffers(window);
 	}
