@@ -421,8 +421,8 @@ int main()
 		if (restore)
 		{
 			ourModel.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, alpha, Aqq, q, 0.8f);
-			ourModel2.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, alpha, Aqq, q, 0.1f);
-			ourModel3.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, alpha, Aqq, q, 0.99f);
+			ourModel2.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, 0.7f, Aqq, q, 0.8f);
+			ourModel3.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, 0.05f, Aqq, q, 0.8f);
 		}
 
 		ourModel.Draw(modelShader,ourModel.modelMatrix, modelLoc);
