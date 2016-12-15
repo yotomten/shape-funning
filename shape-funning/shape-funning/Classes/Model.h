@@ -66,14 +66,13 @@ public:
 	}
 
 	void RestoreDeformedModel(Model &referenceModel, double time, GLfloat k,
-		GLfloat alpha, glm::mat3 Aqq, vector<glm::vec3> q)
+		GLfloat alpha, glm::mat3 Aqq, vector<glm::vec3> q, GLfloat beta)
 	{
 		glm::vec3 goalPos;
 		GLfloat timeStep = (GLfloat)time;
 		GLfloat constrainingForce;
 		GLfloat displacement;
 		glm::vec3 centroid = CalculateCentroid();
-		GLfloat beta = 0.8f;
 
 		glm::mat3 Apq = FindApq(q);
 		glm::mat3 R = FindR(Apq);
