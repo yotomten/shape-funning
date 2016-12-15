@@ -83,6 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\batman\Batman.mtl" />
+    <None Include="Models\Crate2\Crate1.3ds" />
+    <None Include="Models\Crate2\Crate1.blend" />
+    <None Include="Models\Crate2\Crate2.mtl" />
     <None Include="Models\Crate\Crate1.3ds" />
     <None Include="Models\Crate\Crate1.blend" />
     <None Include="Models\Crate\Crate1.mtl" />
@@ -116,6 +119,9 @@
     <Image Include="Images\face.png" />
     <Image Include="Images\medallion.jpg" />
     <Image Include="Images\stone.jpg" />
+    <Image Include="Models\Crate2\brick.jpg" />
+    <Image Include="Models\Crate2\brick2.jpg" />
+    <Image Include="Models\Crate2\crate.jpg" />
     <Image Include="Models\Crate\crate2.jpg" />
     <Image Include="Models\Crate\crate_1.jpg" />
     <Image Include="Models\darksiders\body.png" />
@@ -195,6 +201,10 @@
     <None Include="Models\Crate\Crate1.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <FileType>Document</FileType>
+    </None>
+    <None Include="Models\Crate2\Crate2.obj">
+      <FileType>Document</FileType>
+      <SubType>Designer</SubType>
     </None>
     <Object Include="Models\cube\cube.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

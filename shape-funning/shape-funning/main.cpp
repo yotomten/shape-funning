@@ -349,7 +349,7 @@ int main()
 	Model ourModel3("./Models/Crate/crate1.obj");
 	cout << "Loaded model. " << endl;
 	Model referenceModel = ourModel;
-	Model containingModel = ourModel;
+	Model containingModel("./Models/Crate2/Crate2.obj");
 
 	// Init transformations
 	glm::mat4 model, model2, model3, containingModelMatrix, view, proj;

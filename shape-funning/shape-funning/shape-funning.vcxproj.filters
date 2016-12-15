@@ -72,6 +72,10 @@
     <None Include="Models\Crate\Crate1.blend" />
     <None Include="Models\Crate\Crate1.mtl" />
     <None Include="Models\Crate\Crate1.obj" />
+    <None Include="Models\Crate2\Crate1.3ds" />
+    <None Include="Models\Crate2\Crate1.blend" />
+    <None Include="Models\Crate2\Crate2.obj" />
+    <None Include="Models\Crate2\Crate2.mtl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\container.jpg">
@@ -274,6 +278,15 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Models\Crate\crate2.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\Crate2\crate.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\Crate2\brick.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\Crate2\brick2.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
