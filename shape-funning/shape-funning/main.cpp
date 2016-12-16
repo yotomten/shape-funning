@@ -309,11 +309,17 @@ void HandleDeformation(Model &ourModel, GLfloat time, glm::mat4 &model)
 	{
 		if (alpha < 1.0f)
 			alpha += 0.01f;
+
+		if (alpha > 1.0f)
+		{
+			alpha = 1.0f;
+		}
+
 		cout << "alpha: " << alpha << endl;
 	}
 	if (keys[GLFW_KEY_J])
 	{
-		if (alpha > 0.01f)
+		if (alpha > 0.02f)
 			alpha -= 0.01f;
 		cout << "alpha: " << alpha << endl;
 	}
