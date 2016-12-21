@@ -53,7 +53,6 @@ GLfloat alpha = 0.15f;
 bool restore = true;
 
 // Integration
-
 GLfloat g = 9.82f;
 
 bool InitGlfwAndGlew(GLFWwindow* &window)
@@ -406,9 +405,6 @@ int main()
 		ourModel2.modelMatrix = model2;
 		ourModel3.modelMatrix = model3;
 
-		//bool collision = collisionHandlingServices::ModelsColliding(ourModel,
-			//model, containingModel, containingModelMatrix);
-
 		collisionHandlingServices::CollideWithFloor(ourModel, ourModel.modelMatrix, speed, acceleration);
 		collisionHandlingServices::CollideWithFloor(ourModel2, ourModel2.modelMatrix, speed2, acceleration2);
 		collisionHandlingServices::CollideWithFloor(ourModel3, ourModel3.modelMatrix, speed3, acceleration3);
@@ -431,12 +427,10 @@ int main()
 			ourModel3.RestoreDeformedModel(referenceModel, deltaTime, dampingConstant, 0.05f, Aqq, q, 0.8f);
 		}
 
-		ourModel.Draw(modelShader,ourModel.modelMatrix, modelLoc);
-		containingModel.Draw(modelShader, containingModel.modelMatrix, modelLoc);
-		ourModel2.Draw(modelShader, ourModel2.modelMatrix, modelLoc);
-		ourModel3.Draw(modelShader, ourModel3.modelMatrix, modelLoc);
-
-
+		ourModel.Draw(modelShader, modelLoc);
+		containingModel.Draw(modelShader, modelLoc);
+		ourModel2.Draw(modelShader, modelLoc);
+		ourModel3.Draw(modelShader, modelLoc);
 
 		glfwSwapBuffers(window);
 	}

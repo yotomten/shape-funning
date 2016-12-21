@@ -36,10 +36,10 @@ public:
 	}
 
 	// Draws the model, and thus all its meshes
-	void Draw(Shader shader, glm::mat4 &model, GLuint &modelLoc)
+	void Draw(Shader shader, GLuint &modelLoc)
 	{
 		for (GLuint i = 0; i < this->meshes.size(); i++)
-			this->meshes[i].Draw(shader, model, modelLoc);
+			this->meshes[i].Draw(shader, this->modelMatrix, modelLoc);
 	}
 
 	void DeformModel()
@@ -52,14 +52,6 @@ public:
 					this->meshes[i].vertices[j].Position.y += 0.02f;
 				else
 					this->meshes[i].vertices[j].Position.y -= 0.02f;
-				//if (this->meshes[i].vertices[j].Position.x < 0)
-				//	this->meshes[i].vertices[j].Position.x += 0.02f;
-				//else
-				//	this->meshes[i].vertices[j].Position.x -= 0.02f;
-				//if (this->meshes[i].vertices[j].Position.z < 0)
-				//	this->meshes[i].vertices[j].Position.z += 0.02f;
-				//else
-				//	this->meshes[i].vertices[j].Position.z -= 0.02f;
 			}
 			this->meshes[i].setupMesh();
 		}
