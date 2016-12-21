@@ -231,15 +231,15 @@ public:
 	{
 		glm::mat3 m1 = m;
 		glm::mat3 m2 = glm::mat3();
-		glm::mat3 half_mat;
-		half_mat = 0.5f * glm::mat3();
+		glm::mat3 inv1;
+		glm::mat3 inv2;
 
-		for (int i = 0; i < 100; ++i)
+		for (int i = 0; i < 12; ++i)
 		{
-			glm::mat3 inv1 = glm::inverse(m1);
-			glm::mat3 inv2 = glm::inverse(m2);
-			m1 = (m1 + inv2) * half_mat;
-			m2 = (m2 + inv1) * half_mat;
+			inv1 = glm::inverse(m1);
+			inv2 = glm::inverse(m2);
+			m1 = (m1 + inv2) * 0.5f;
+			m2 = (m2 + inv1) * 0.5f;
 		}
 
 		return m1;
