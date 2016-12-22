@@ -186,48 +186,6 @@ void InitTexture(const char* path, GLuint &texture)
 	glBindTexture(GL_TEXTURE_2D, 0); // Unbind
 }
 
-void InitHandleVertexInformation(GLuint &VBO,GLuint &VAO,GLuint &EBO)
-{
-
-	// Init triangle VBO to store vertices in GPU memory, rectangle EBO to index vertices
-	// and VAO to collect all states
-
-	const GLuint* vertices[3]; // Just since model
-
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copies vertex data to GPU
-	// GL_STATIC_DRAW since the data most likely
-	// will not change
-	// The VBO is stored in VAO
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); // Stored in VAO
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// Specify how vertex data is to be interpreted...........................................
-	// Position attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0); // Arg1 0 since position is layout 0
-																					  // Arg2 3 since position data vec3
-																					  // Arg4 false since already normalized values
-																					  // Arg5 Space between attribute sets
-																					  // Arg6 No data offset in buffer 
-	glEnableVertexAttribArray(0); // Vertex attribute location is 0 for position
-
-	// Color attributes
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	//glEnableVertexAttribArray(1); // Vertex attribute location is 1 for color
-
-	// Texture attributes
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-
-	glBindVertexArray(0); // Unbind vertex array to not risk misconfiguring later on
-}
-
 // Moves/alters the camera positions based on user input
 void DoMovement()
 {
