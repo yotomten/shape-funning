@@ -20,10 +20,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="Classes\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Services\collisionHandlingServices.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -33,11 +45,266 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.vert">
+    <None Include="Shaders\simpleShader.frag">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="shader.frag">
+    <None Include="Shaders\simpleShader.vert">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="Models\nanosuit\nanosuit.blend" />
+    <None Include="Models\nanosuit\nanosuit.mtl" />
+    <None Include="Shaders\model_loading.vert" />
+    <None Include="Shaders\model_loading.frag" />
+    <None Include="Models\torus\torus.mtl" />
+    <None Include="Models\ironman\v1_0_IronManRigged.max" />
+    <None Include="Models\ironman\IronMan.mtl" />
+    <None Include="Models\portalcube\Cube.FBX" />
+    <None Include="Models\batman\Batman.mtl" />
+    <None Include="Models\yoda\yoda.3ds" />
+    <None Include="Models\yoda\yoda.c4d" />
+    <None Include="Models\yoda\yoda.mtl" />
+    <None Include="Models\spider\spider.mtl" />
+    <None Include="Models\darksiders\WAR.3ds" />
+    <None Include="Models\darksiders\WAR.c4d" />
+    <None Include="Models\rubik\RubiksCube.mtl" />
+    <None Include="Models\rubik\RubiksCube.3ds" />
+    <None Include="Models\Crate\Crate1.3ds" />
+    <None Include="Models\Crate\Crate1.blend" />
+    <None Include="Models\Crate\Crate1.mtl" />
+    <None Include="Models\Crate\Crate1.obj" />
+    <None Include="Models\Crate2\Crate1.3ds" />
+    <None Include="Models\Crate2\Crate1.blend" />
+    <None Include="Models\Crate2\Crate2.obj" />
+    <None Include="Models\Crate2\Crate2.mtl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Images\container.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Images\face.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Images\medallion.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Images\stone.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\hand_showroom_ddn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\hand_showroom_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\helmet_diff.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\helmet_showroom_ddn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\helmet_showroom_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\leg_dif.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\leg_showroom_ddn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\leg_showroom_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\arm_dif.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\arm_showroom_ddn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\arm_showroom_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\body_dif.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\body_showroom_ddn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\body_showroom_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\glass_ddn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\glass_dif.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\nanosuit\hand_dif.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\portalcube\cube.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\portalcube\cube_heart.dds" />
+    <Image Include="Models\yoda\Head.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Head_b.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Head_s.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Limbs.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Limbs_b.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Stick.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\body.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\body_b.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\body_s.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\yoda\Eye.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\spider\SpiderTex.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\body.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\Body_alpha.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\body_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\body_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\face.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\face_illum.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\face_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\face_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\limbs.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\Limbs_alpha.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\limbs_illum.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\limbs_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\limbs_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\sword.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\sword_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\tex\sword_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\body.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\Body_alpha.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\body_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\body_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\face.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\face_illum.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\face_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\face_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\limbs.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\Limbs_alpha.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\limbs_illum.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\limbs_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\limbs_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\sword.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\sword_nrm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\darksiders\sword_spec.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\Crate\crate_1.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\Crate\crate2.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\Crate2\crate.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\Crate2\brick.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Models\Crate2\brick2.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Models\nanosuit\LICENSE.txt" />
+    <Text Include="Models\yoda\credit.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Models\nanosuit\nanosuit.obj" />
+    <Object Include="..\..\..\..\OpenGL\Models\jzb865er6v-IronMan\IronMan\IronMan.obj" />
+    <Object Include="Models\torus\torus.obj" />
+    <Object Include="Models\ironman\IronMan.obj" />
+    <Object Include="Models\batman\Batman.obj" />
+    <Object Include="Models\yoda\yoda.obj" />
+    <Object Include="Models\spider\spider.obj" />
+    <Object Include="Models\cube\cube.obj" />
+    <Object Include="Models\darksiders\WAR.obj" />
+    <Object Include="Models\rubik\RubiksCube.obj" />
+    <Object Include="Models\rubik\RubiksCube2.obj" />
   </ItemGroup>
 </Project>

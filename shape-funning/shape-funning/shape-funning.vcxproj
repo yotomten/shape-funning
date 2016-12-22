@@ -50,7 +50,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SOIL.lib;opengl32.lib;glfw3.lib;glew32s.lib;assimpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -71,19 +71,168 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Classes\Camera.h" />
+    <ClInclude Include="Classes\Model.h" />
+    <ClInclude Include="Classes\Mesh.h" />
+    <ClInclude Include="Services\collisionHandlingServices.cpp" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Classes\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="shape-funning.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.frag">
+    <None Include="Models\batman\Batman.mtl" />
+    <None Include="Models\Crate2\Crate1.3ds" />
+    <None Include="Models\Crate2\Crate1.blend" />
+    <None Include="Models\Crate2\Crate2.mtl" />
+    <None Include="Models\Crate\Crate1.3ds" />
+    <None Include="Models\Crate\Crate1.blend" />
+    <None Include="Models\Crate\Crate1.mtl" />
+    <None Include="Models\darksiders\WAR.3ds" />
+    <None Include="Models\darksiders\WAR.c4d" />
+    <None Include="Models\ironman\IronMan.mtl" />
+    <None Include="Models\ironman\v1_0_IronManRigged.max" />
+    <None Include="Models\nanosuit\nanosuit.blend" />
+    <None Include="Models\nanosuit\nanosuit.mtl" />
+    <None Include="Models\portalcube\Cube.FBX">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Models\rubik\RubiksCube.3ds" />
+    <None Include="Models\rubik\RubiksCube.mtl" />
+    <None Include="Models\spider\spider.mtl" />
+    <None Include="Models\torus\torus.mtl" />
+    <None Include="Models\yoda\yoda.3ds" />
+    <None Include="Models\yoda\yoda.c4d" />
+    <None Include="Models\yoda\yoda.mtl" />
+    <None Include="Shaders\model_loading.frag" />
+    <None Include="Shaders\model_loading.vert" />
+    <None Include="Shaders\simpleShader.frag">
       <FileType>Document</FileType>
     </None>
-    <None Include="shader.vert">
+    <None Include="Shaders\simpleShader.vert">
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Images\container.jpg" />
+    <Image Include="Images\face.png" />
+    <Image Include="Images\medallion.jpg" />
+    <Image Include="Images\stone.jpg" />
+    <Image Include="Models\Crate2\brick.jpg" />
+    <Image Include="Models\Crate2\brick2.jpg" />
+    <Image Include="Models\Crate2\crate.jpg" />
+    <Image Include="Models\Crate\crate2.jpg" />
+    <Image Include="Models\Crate\crate_1.jpg" />
+    <Image Include="Models\darksiders\body.png" />
+    <Image Include="Models\darksiders\Body_alpha.png" />
+    <Image Include="Models\darksiders\body_nrm.png" />
+    <Image Include="Models\darksiders\body_spec.png" />
+    <Image Include="Models\darksiders\face.png" />
+    <Image Include="Models\darksiders\face_illum.png" />
+    <Image Include="Models\darksiders\face_nrm.png" />
+    <Image Include="Models\darksiders\face_spec.png" />
+    <Image Include="Models\darksiders\limbs.png" />
+    <Image Include="Models\darksiders\Limbs_alpha.png" />
+    <Image Include="Models\darksiders\limbs_illum.png" />
+    <Image Include="Models\darksiders\limbs_nrm.png" />
+    <Image Include="Models\darksiders\limbs_spec.png" />
+    <Image Include="Models\darksiders\sword.png" />
+    <Image Include="Models\darksiders\sword_nrm.png" />
+    <Image Include="Models\darksiders\sword_spec.png" />
+    <Image Include="Models\darksiders\tex\body.png" />
+    <Image Include="Models\darksiders\tex\Body_alpha.png" />
+    <Image Include="Models\darksiders\tex\body_nrm.png" />
+    <Image Include="Models\darksiders\tex\body_spec.png" />
+    <Image Include="Models\darksiders\tex\face.png" />
+    <Image Include="Models\darksiders\tex\face_illum.png" />
+    <Image Include="Models\darksiders\tex\face_nrm.png" />
+    <Image Include="Models\darksiders\tex\face_spec.png" />
+    <Image Include="Models\darksiders\tex\limbs.png" />
+    <Image Include="Models\darksiders\tex\Limbs_alpha.png" />
+    <Image Include="Models\darksiders\tex\limbs_illum.png" />
+    <Image Include="Models\darksiders\tex\limbs_nrm.png" />
+    <Image Include="Models\darksiders\tex\limbs_spec.png" />
+    <Image Include="Models\darksiders\tex\sword.png" />
+    <Image Include="Models\darksiders\tex\sword_nrm.png" />
+    <Image Include="Models\darksiders\tex\sword_spec.png" />
+    <Image Include="Models\nanosuit\arm_dif.png" />
+    <Image Include="Models\nanosuit\arm_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\arm_showroom_spec.png" />
+    <Image Include="Models\nanosuit\body_dif.png" />
+    <Image Include="Models\nanosuit\body_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\body_showroom_spec.png" />
+    <Image Include="Models\nanosuit\glass_ddn.png" />
+    <Image Include="Models\nanosuit\glass_dif.png" />
+    <Image Include="Models\nanosuit\hand_dif.png" />
+    <Image Include="Models\nanosuit\hand_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\hand_showroom_spec.png" />
+    <Image Include="Models\nanosuit\helmet_diff.png" />
+    <Image Include="Models\nanosuit\helmet_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\helmet_showroom_spec.png" />
+    <Image Include="Models\nanosuit\leg_dif.png" />
+    <Image Include="Models\nanosuit\leg_showroom_ddn.png" />
+    <Image Include="Models\nanosuit\leg_showroom_spec.png" />
+    <Image Include="Models\portalcube\cube.png" />
+    <Image Include="Models\portalcube\cube_heart.dds" />
+    <Image Include="Models\spider\SpiderTex.jpg" />
+    <Image Include="Models\yoda\body.png" />
+    <Image Include="Models\yoda\body_b.png" />
+    <Image Include="Models\yoda\body_s.png" />
+    <Image Include="Models\yoda\Eye.jpg" />
+    <Image Include="Models\yoda\Head.jpg" />
+    <Image Include="Models\yoda\Head_b.jpg" />
+    <Image Include="Models\yoda\Head_s.jpg" />
+    <Image Include="Models\yoda\Limbs.jpg" />
+    <Image Include="Models\yoda\Limbs_b.jpg" />
+    <Image Include="Models\yoda\Stick.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Models\nanosuit\LICENSE.txt" />
+    <Text Include="Models\yoda\credit.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\..\..\..\OpenGL\Models\jzb865er6v-IronMan\IronMan\IronMan.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\batman\Batman.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <None Include="Models\Crate\Crate1.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Models\Crate2\Crate2.obj">
+      <FileType>Document</FileType>
+      <SubType>Designer</SubType>
+    </None>
+    <Object Include="Models\cube\cube.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\darksiders\WAR.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\ironman\IronMan.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\nanosuit\nanosuit.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\rubik\RubiksCube.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\rubik\RubiksCube2.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\spider\spider.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\torus\torus.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\yoda\yoda.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
