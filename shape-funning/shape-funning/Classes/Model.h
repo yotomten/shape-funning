@@ -1,4 +1,7 @@
 #pragma once
+
+// The code in this file is based on the guide http://www.learnopengl.com/#!Model-Loading/Model
+
 // Std. Includes
 #include <string>
 #include <fstream>
@@ -226,7 +229,7 @@ public:
 	}
 
 
-	// Perform Denman–Beavers iteration to find the square root.
+	// Perform Denmanâ€“Beavers iteration to find the square root.
 	glm::mat3 sqrtMat(glm::mat3 m)
 	{
 		glm::mat3 m1 = m;
