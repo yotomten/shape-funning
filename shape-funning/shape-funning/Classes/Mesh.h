@@ -1,4 +1,9 @@
 #pragma once
+
+
+
+// The code in this file is based on the guide http://www.learnopengl.com/#!Model-Loading/Mesh
+
 // Std. Includes
 #include <string>
 #include <fstream>
@@ -6,6 +11,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
+
 // GL Includes
 #include <GL/glew.h> // Contains all the necessery OpenGL includes
 #include <glm/glm.hpp>
