@@ -8,6 +8,8 @@
 
 #include <GL/glew.h>
 
+// The code in this file is based on the guide http://www.learnopengl.com/#!Getting-started/Shaders
+
 class Shader
 {
 public:
