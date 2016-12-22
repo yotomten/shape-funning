@@ -1,5 +1,7 @@
 #pragma once
 
+// The code in this file is based on the guide http://www.learnopengl.com/#!Getting-started/Camera
+
 // Std. Includes
 #include <vector>
 
